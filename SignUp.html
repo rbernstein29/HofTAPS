@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="SignUp.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HofTAPS Sign Up</title>
+  <script type="module" src="SignUp.js" defer> </script>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .signup-container {
+      width: 350px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .signup-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .signup-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .signup-container input[type="text"],
+    .signup-container input[type="email"],
+    .signup-container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .signup-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .signup-container input[type="submit"]:hover {
+      background: #0056b3;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Sign Up for HofTAPS</h2>
+    <form id = "signup-form" action="#" method="post">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="h700">H700 Number:</label>
+      <input type="text" id="h700" name="h700" required>
+
+      <label for="fname">First Name:</label>
+      <input type="text" id="fname" name="fname" required>
+
+      <label for="lname">Last Name:</label>
+      <input type="text" id="lname" name="lname" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" minlength:"8" required>
+
+      <label for="confirm_password">Re-enter Password:</label>
+      <input type="password" id="confirm_password" name="confirm_password" minlength:"8" required>
+
+      <input type="submit" id="signup-btn" value="Sign Up">
+    </form>
+  </div>
+
+  <div class="background">
+    <!-- Ensure you have at least 20 <span> elements to match your CSS -->
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+</body>
+</html>
