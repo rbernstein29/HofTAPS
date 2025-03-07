@@ -1,4 +1,4 @@
-
+import { addUser } from './firebaseInterface.js';
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 
@@ -66,7 +66,7 @@ const signUpButtonPressed = async (e) => {
         console.log(error.code)
     }
 
-   
+   addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value, password_input.value)
 };
 
 

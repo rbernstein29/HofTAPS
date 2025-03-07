@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { collection, doc, addDoc, getDoc, getDocs, deleteDoc, query } from "firebase/firestore"; 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { collection, doc, addDoc, getDoc, getDocs, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,7 +18,7 @@ const db = getFirestore(app);
 
 
 // Create User Entry in Database
-async function setUserData(f_name, l_name, mail, h_num, psswrd) {
+export async function addUser(f_name, l_name, mail, h_num, psswrd) {
   await addDoc(collection(db, "User Data"), {
     first_name: f_name,     // users first name
     last_name: l_name,      // users last name
@@ -29,7 +29,7 @@ async function setUserData(f_name, l_name, mail, h_num, psswrd) {
 }
 
 // Create Textbook Entry in Database 
-async function setTextbookData(text_title, text_author, text_isbn, text_edition, text_subject) {
+async function addTextbook(text_title, text_author, text_isbn, text_edition, text_subject) {
   await addDoc(collection(db, "Textbook Data"), {
     title: text_title,      // textbook title
     author: text_author,    // textbook author
@@ -40,7 +40,7 @@ async function setTextbookData(text_title, text_author, text_isbn, text_edition,
 }
 
 // Create Listing Entry in Database 
-async function setListingData(text_title, text_author, text_isbn, text_edition, text_subject, text_condition, text_price, text_description) {
+async function addListing(text_title, text_author, text_isbn, text_edition, text_subject, text_condition, text_price, text_description) {
   await addDoc(collection(db, "Listing Data"), {
     title: text_title,            // textbook title
     author: text_author,          // textbook author
@@ -54,7 +54,7 @@ async function setListingData(text_title, text_author, text_isbn, text_edition, 
 }
 
 // Delete Data from Database
-async function deleteData(dataType, toDelete) {
+async function deleteEntry(dataType, toDelete) {
   const docRef = doc(db, dataType, toDelete);
   const docSnap = await getDoc(docRef);
 
@@ -67,7 +67,7 @@ async function deleteData(dataType, toDelete) {
 }
 
 // Read Entry from Database
-async function getData(dataType, toGet) {
+async function getEntry(dataType, toGet) {
   const docRef = doc(db, dataType, toGet);
   const docSnap = await getDoc(docRef);
 
@@ -83,7 +83,7 @@ const textQuery = query(collection(db, "Textbook Data"));
 const listQuery = query(collection(db, "Listing Data"));
 
 // Read all Data from Database
-async function getAllData() {
+async function getAllEntries() {
   const userSnapshot = await getDocs(userQuery);
   userSnapshot.forEach((doc) => {
   // doc.data() is never undefined for query doc snapshots
@@ -109,4 +109,4 @@ async function getAllData() {
 //deleteData("Listing Data", "listing1");
 //deleteData("User Data", "user1");
 //getData("Listing Data", "listing1");
-getAllData();
+getAllEntries();
