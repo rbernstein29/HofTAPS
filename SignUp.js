@@ -59,6 +59,7 @@ const signUpButtonPressed = async (e) => {
         confirmpassword_input.setCustomValidity("");
     }
 
+  
     try {
         const userCredential =  await createUserWithEmailAndPassword(auth, email.value, password.value);
         console.log(userCredential)
@@ -66,7 +67,8 @@ const signUpButtonPressed = async (e) => {
         console.log(error.code)
     }
 
-   addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value, password_input.value)
+
+   addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value);
 };
 
 
