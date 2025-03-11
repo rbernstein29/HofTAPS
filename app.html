@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="app.js" defer> </script>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .signup-container{
+      width: 350px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+      
+    }
+    
+    .signup-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .signup-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .signup-container input[type="text"],
+    .signup-container input[type="email"],
+    .signup-container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .signup-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .signup-container input[type="submit"]:hover {
+      background: #0056b3;
+    }
+
+    .hidden-container{
+      text-align: center;
+      width: 350px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      background-color: white;
+
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+
+      display: none;
+    }
+
+    
+
+    .hidden-container input[type="submit"]{
+      font-weight: bold;
+      background: red;
+    }
+
+    .login-container{
+      width: 350px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="email"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .login-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .login-container input[type="submit"]:hover {
+      background: #0056b3;
+    }
+
+    
+  </style>
+
+</head>
+<body>
+
+
+  <div class="signup-container" action="#" method="post">
+    <div id = "signup-form">
+
+      <h2>Sign Up for HofTAPS</h2>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="h700">H700 Number:</label>
+      <input type="text" id="h700" name="h700" required>
+
+      <label for="fname">First Name:</label>
+      <input type="text" id="fname" name="fname" required>
+
+      <label for="lname">Last Name:</label>
+      <input type="text" id="lname" name="lname" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" minlength:"8" required>
+
+      <label for="confirm_password">Re-enter Password:</label>
+      <input type="password" id="confirm_password" name="confirm_password" minlength:"8" required>
+
+      <input type="submit" id="signup-btn" value="Sign Up">
+
+      <p>Already have an account? <button id="show-signin-btn">Sign In</button></p>
+    </div>
+  </div>
+
+  <!-- User Profile (hidden by default) -->
+  <div id="profile-container" class="hidden-container">
+    <h2>User Profile</h2>
+    <p>Welcome, <span id="user-name">User</span>!</p>
+    <!-- Add more profile details as needed -->
+    <input type="submit" id="logout-btn" value="Log Out">
+  </div>
+
+  <!-- User Login (hidden by default) -->
+  <div class="login-container" action="#" method="post">
+    <div id = "login-form">
+
+      <h2>Login HofTAPS</h2>
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" minlength:"8" required>
+
+      <input type="submit" id="login-btn" value="Log In">
+
+      <p id="login-error-message" style="color:red;"></p>
+
+      <p>Want to create an account? <button id="show-signup-btn">Sign Up</button></p>
+    </div>
+  </div>
+
+  <div class="background">
+    <!-- Ensure you have at least 20 <span> elements to match your CSS -->
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+</body>
+</html>
