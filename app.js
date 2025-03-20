@@ -186,6 +186,7 @@ document.getElementById("login-btn").addEventListener("click", async (e) => {
     // Attempt to log in
     await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
     console.log("User logged in successfully");
+    window.history.back();
   } catch (error) {
     console.error("Error logging in:", error.code);
 

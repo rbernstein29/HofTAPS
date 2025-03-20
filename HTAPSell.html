@@ -43,7 +43,7 @@
             padding: 10px;
             font-size: 14px;
         }
-			/* Wrapper for button and logo */
+	/* Wrapper for button and logo */
 	.sidebar-toggle-wrapper {
 		position: fixed;
 		top: 10px; /* Adjust vertical position */
@@ -88,6 +88,11 @@
     </style>
 </head>
 <body>
+    <!-- Verifies that the user is signed in -->
+    <script type="module">
+        import { authUser } from './authUser.js';
+        authUser();
+      </script>
 
 	<!-- Sidebar Toggle Button with Image -->
 	<div class="sidebar-toggle-wrapper">
@@ -108,9 +113,9 @@
         </div>
          <div class="offcanvas-body">
             <a href="HTAPHome.html" class="d-block text-white text-decoration-none p-2">Home</a>
-            <a href="app.html" class="d-block text-white text-decoration-none p-2">Account</a>
+            <a href="account.html" class="d-block text-white text-decoration-none p-2">Account</a>
             <a href="#" class="d-block text-white text-decoration-none p-2">Notifications</a>
-            <a href="#" class="d-block text-white text-decoration-none p-2">Wishlist</a>
+            <a href="wishlist.html" class="d-block text-white text-decoration-none p-2">Wishlist</a>
             <a href="#" class="d-block text-white text-decoration-none p-2">Listings</a>
             <a href="HTAPSell.html" class="d-block text-white text-decoration-none p-2">Sell Your Book</a>
             <a href="#" class="d-block text-white text-decoration-none p-2">Settings</a>

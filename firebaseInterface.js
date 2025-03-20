@@ -2,7 +2,8 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { collection, doc, addDoc, getDoc, getDocs, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
+import { collection, doc, addDoc, getDoc, 
+  getDocs, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
 
 
 // Initialize Firebase
@@ -17,6 +18,8 @@ export async function addUser(f_name, l_name, mail, h_num) {
     last_name: l_name,      // users last name
     email: mail,            // users email
     h_number: h_num,        // users id number
+    listings: [],           // users listings
+    wishlist: []            // users wishlist
   });
 }
 
@@ -71,14 +74,15 @@ async function deleteTextbook(toDelete) {
   }
 }
 
-// Read User Entry
-async function getUser(toGet) {
-  const docRef = doc(db, "User Data", toGet);
-  const docSnap = await getDoc(docRef);
+// Read and Return User Entry
+export async function getUser(toGet) {
+  const docRef = query(collection(db, "User Data"), where("email", "==", toGet));   // Gets user with matching email
+  const docSnap = await getDocs(docRef);
 
-  if (docSnap.exists()) {
-    console.log(docSnap.id, " => ", docSnap.data());
-  } else {
+  const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+  if (snap) {
+    return doc(db, "User Data", snap.id);
+  } else {  // No user with email found
     console.log("DOCUMENT NOT FOUND");
   }
 }
@@ -90,6 +94,7 @@ async function getTextbook(toGet) {
 
   if (docSnap.exists()) {
     console.log(docSnap.id, " => ", docSnap.data());
+    return docSnap.data();
   } else {
     console.log("DOCUMENT NOT FOUND");
   }

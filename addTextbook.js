@@ -2,11 +2,14 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { collection, doc, addDoc, getDoc, getDocs, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
+import { collection, addDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import { getUser } from './firebaseInterface.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
 
 // Elements from HTAPSell.html which are entered by the user
 const text_title = document.getElementById('title');
@@ -25,8 +28,8 @@ const publishButton = document.getElementById('publishButton');
 // Detects when the publish button is pressed and executes publishing
 const publishButtonPressed = async (e) => {
     e.preventDefault();
-    // Certain information must be entered by the user
 
+    // Certain information must be entered by the user
     // Requires the user to enter an ISBN number
     if (!text_isbn.value) {
         text_isbn.setCustomValidity("Please enter a valid ISBN number.");
@@ -51,15 +54,15 @@ const publishButtonPressed = async (e) => {
     // Fetches the thumbnail image of the textbook from the Google Books API
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${text_isbn.value}`);
     const data = await response.json();
-
+   
     // Checks if the ISBN was found in the Google Books API
-    // If not, the thumbnail is set to the front cover image uploaded by the user
+    // If not, the thumbnail is set to the front cover image uploaded by the user, which may be empty
     var text_thumbnail = ""
-    if (data.items) {text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail} 
+    if (data.items) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail } 
     else {text_thumbnail = front_cover_img.value}
 
     // Adds the textbook with the user entered information to the textbook section in Firebase
-    await addDoc(collection(db, "Textbook Data"), {
+    const docRef = await addDoc(collection(db, "Textbook Data"), {
         title: text_title.value,                                                        // textbook title
         author: text_author.value,                                                      // textbook author
         isbn_number: text_isbn.value,                                                   // textbook isbn number
@@ -71,7 +74,27 @@ const publishButtonPressed = async (e) => {
         back_cover: back_cover_img.value,                                               // textbook back cover picture
         spine: spine_img.value,                                                         // textbook spine picture
         thumbnail: text_thumbnail,                                                      // textbook thumbnail
+        seller: auth.currentUser.email,                                                 // textbook seller
     });
+
+    // Adds the textbook above to the user's listings in Firebase
+    onAuthStateChanged(auth, (user) => {
+        getUser(user.email)
+        .then((result) => {
+            const addListing = async () => {
+                try {
+                    // Add new listing ID to the user's listings array
+                    await updateDoc(result, {
+                        listings: arrayUnion(docRef)
+                    });
+                } catch (error) {
+                    console.error("Error updating user listings:", error);
+                }
+            }
+        addListing();
+        })
+    });
+    
 }
 
 publishButton.addEventListener("click", publishButtonPressed);
