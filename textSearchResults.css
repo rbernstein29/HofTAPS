@@ -1,0 +1,85 @@
+body {
+    background-color: #1E3A8A;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+}
+.book-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+.book-card {
+    background: white;
+    color: #1E3A8A;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.book-card img {
+    width: 120px;
+    height: 180px;
+    border-radius: 6px;
+}
+.book-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.book-author {
+    font-size: 14px;
+    margin-top: 5px;
+}
+.place-offer-button {
+    background-color: #FFD700;
+    color: #1E3A8A;
+    font-weight: bold;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.golden-btn {
+    background-color: #FFD700;
+    color: black;;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+}
+
+.golden-btn:hover {
+    background-color: #E6C200;
+    
+}
+
+/* Wrapper for button and logo */
+.sidebar-toggle-wrapper {
+    position: fixed;
+    top: 10px; /* Adjust vertical position */
+    left: 10px; /* Adjust horizontal position */
+    display: flex;
+    align-items: center; /* Align items vertically */
+    z-index: 1000; /* Ensure visibility */
+}
+
+/* Style the logo to match the button size */
+.sidebar-logo {
+    height: 40px; /* Adjust height to match button */
+    margin-right: 5px; /* Add spacing between logo and button */
+}
+
+/* Ensure the button retains its appearance */
+.sidebar-toggle {
+    height: 40px; /* Match the logo height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure visibility */
+}
