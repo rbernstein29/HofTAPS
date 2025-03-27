@@ -1,16 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCVmx7rzCJf84-dhvbtVbCud9XN5BaGars",
-  authDomain: "hoftaps-db6f8.firebaseapp.com",
-  projectId: "hoftaps-db6f8",
-  storageBucket: "hoftaps-db6f8.appspot.com",
-  messagingSenderId: "1009832415546",
-  appId: "1:1009832415546:web:55f3c5351cda418f6f4003",
-  measurementId: "G-W6Q2E49PEK"
-};
+import { firebaseConfig } from "./hoftapsFirebaseConfig.js";
 
 // Initialize Firebase and Firestore
 const app = initializeApp(firebaseConfig);
@@ -54,7 +44,7 @@ async function fetchBookByISBN(isbn) {
 /**
  * Fetch books listed in Firebase and match them with the ISBN.
  */
-async function fetchMatchingBooks(isbn) {
+export async function fetchMatchingBooks(isbn) {
     const isbnBook = await fetchBookByISBN(isbn);
     if (!isbnBook) {
         console.log("No book found in ISBN API.");

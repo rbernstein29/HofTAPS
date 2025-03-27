@@ -83,7 +83,7 @@ const publishButtonPressed = async (e) => {
         .then((result) => {
             const addListing = async () => {
                 try {
-                    // Add new listing ID to the user's listings array
+                    // Adds new listing to user's listings
                     await updateDoc(result, {
                         listings: arrayUnion(docRef)
                     });
