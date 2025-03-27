@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { firebaseConfig } from "./hoftapsFirebaseConfig.js";
-import { displayResults } from "./searchResults.js";
 
 // Initialize Firebase and Firestore
 const app = initializeApp(firebaseConfig);
@@ -19,7 +18,7 @@ searchButton.onclick = async (e) =>{
 
         localStorage.searchResults = JSON.stringify(results);
     
-        window.location.href = "searchResults.html";
+        window.location.href = "textSearchResults.html";
     });
 
 }
