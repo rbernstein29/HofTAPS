@@ -5,6 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { 
     getAuth,
     createUserWithEmailAndPassword,
+    sendEmailVerification,
     onAuthStateChanged,
     signOut,
     signInWithEmailAndPassword
@@ -46,7 +47,7 @@ onAuthStateChanged(auth, (user) => {
     // Hide signup container, show profile
     signUpContainer.style.display = "none";
     document.querySelector(".login-container").style.display = "none";
-    userProfileView.style.display = "block";
+    // userProfileView.style.display = "block";
     UIuserEmail.innerHTML = user.email;
   } else {
     signUpContainer.style.display = "none";
@@ -91,15 +92,24 @@ const signUpButtonPressed = async (e) => {
     }
 
     try {
-        const userCredential =  await createUserWithEmailAndPassword(auth, email_input.value, password.value);
-        console.log(userCredential)
+            const userCredential =  await createUserWithEmailAndPassword(auth, email_input.value, password_input.value);
+            const user = userCredential.user;
+            console.log(userCredential)
+    
+            // Send email verification
+            await sendEmailVerification(user);
+    
+            // Display a message to the user
+            alert("Verification email sent. Check your inbox.");
 
+            window.location.href = "HTAPHome.html";
 
-    } catch(error) {
-        console.log(error.code)
-    }
+    
+        } catch(error) {
+            console.log(error.code)
+        }
 
-    addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value);
+   addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value);
 
    
 };
@@ -128,7 +138,7 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     .then(() => {
       console.log('User signed out.');
     // Hide profile container and signup container
-  document.getElementById("profile-container").style.display = "none";
+    // document.getElementById("profile-container").style.display = "none";
   document.querySelector(".signup-container").style.display = "none";
     // Show signup container
   document.querySelector(".login-container").style.display = "block";
@@ -206,7 +216,9 @@ document.getElementById("login-btn").addEventListener("click", async (e) => {
         break;
       default:
         errorMessage = "The email or password is invalid";
-    }
+    } 
+    
+
 
     // Display the error message
     loginErrorMessage.textContent = errorMessage;
