@@ -88,13 +88,12 @@ export async function getUser(toGet) {
 }
 
 // Read Textbook Entry
-async function getTextbook(toGet) {
+export async function getTextbook(toGet) {
   const docRef = doc(db, "Textbook Data", toGet);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    console.log(docSnap.id, " => ", docSnap.data());
-    return docSnap.data();
+    return docRef;
   } else {
     console.log("DOCUMENT NOT FOUND");
   }

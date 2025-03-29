@@ -67,7 +67,7 @@ const publishButtonPressed = async (e) => {
         author: text_author.value,                                                      // textbook author
         isbn_number: text_isbn.value,                                                   // textbook isbn number
         subject: text_subject.value,                                                    // textbook subject
-        price: text_price.value,                                                        // textbook price
+        price: Number(text_price.value),                                                // textbook price
         condition: text_condition.value,                                                // textbook condition
         description: text_description.value,                                            // textbook description
         front_cover: front_cover_img.value,                                             // textbook front cover picture

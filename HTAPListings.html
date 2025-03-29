@@ -6,102 +6,10 @@
     <title>Sell Your Book - HofTAPS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-		body, html {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			overflow-x: hidden;
-		}
-		.top-section {
-			background-color: #2414d9;
-			color: #ffbb00;
-			text-align: center;
-			padding: 30px 0;
-			-webkit-text-stroke: 0.25px white;
-		}
-		.middle-section {
-			background-color: white;
-			padding: 30px 0;
-		}
-
-		.upload-section {
-			background-color: #ffbb00;
-			text-align: center;
-			padding: 15px;
-			font-weight: bold;
-		}
-		.file-upload {
-			border: 2px dashed #ccc;
-			padding: 20px;
-			text-align: center;
-			margin: 10px;
-		}
-		.footer {
-			background-color: #ffbb00;
-			text-align: center;
-			padding: 10px;
-			font-size: 14px;
-		}
-			/* Wrapper for button and logo */
-		.sidebar-toggle-wrapper {
-		position: fixed;
-		top: 10px; /* Adjust vertical position */
-		left: 10px; /* Adjust horizontal position */
-		display: flex;
-		align-items: center; /* Align items vertically */
-		z-index: 1000; /* Ensure visibility */
-		}
-
-		/* Style the logo to match the button size */
-		.sidebar-logo {
-			height: 40px; /* Adjust height to match button */
-			margin-right: 5px; /* Add spacing between logo and button */
-		}
-
-		/* Ensure the button retains its appearance */
-		.sidebar-toggle {
-			height: 40px; /* Match the logo height */
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			z-index: 1000; /* Ensure visibility */
-		}
-		/* Wrapper for image and text */
-		.image-text-wrapper {
-			position: relative; /* Allows absolute positioning of the text */
-			display: inline-block; /* Ensures the image and text stay together */
-		}
-
-		/* Style the text */
-		.centered-text {
-			position: absolute;
-			top: 50%; /* Centers text vertically */
-			left: 50%; /* Centers text horizontally */
-			transform: translate(-50%, -50%); /* Offsets the text by its own dimensions */
-			color: white; /* Text color */
-			font-size: 1rem; /* Adjust text size */
-			font-weight: bold; /* Optional: make the text bold */
-			text-align: center; /* Optional: center align if the text spans multiple lines */
-		}
-
-		.book-item {
-			display: flex;
-			align-items: center;
-			border-bottom: 2px solid #ccc; /* Separator line */
-			padding: 15px 0;
-		}
-		.book-item img {
-			width: 100px; /* Adjust image size */
-			height: auto;
-			margin-right: 15px;
-		}
-		.book-details {
-			display: flex;
-			flex-direction: column;
-		}
-
-    </style>
+	<script type="module" src="listings.js" defer></script>
+	<script type="module" src="textSearchResults.js" defer></script>
+	<script type="module" src="purchaseTextbook.js" defer></script>
+	<link rel="stylesheet" href="HTAPListings.css">
 </head>
 <body>
 
@@ -140,14 +48,14 @@
     <div class="container middle-section">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <input type="text" id="search" class="form-control mb-3" placeholder="Search by ISBN, Title, or Author">
+                <input type="text" id="search-bar" class="form-control mb-3" placeholder="Search by ISBN, Title, or Author">
 
                 <!-- Filter Section -->
                 <div class="mb-3">
                     <div class="d-flex">
                         <input type="number" id="minPrice" class="form-control me-2" placeholder="Min Price">
                         <input type="number" id="maxPrice" class="form-control" placeholder="Max Price">
-                        <button class="btn btn-primary ms-2" onclick="fetchBooks()">Apply</button>
+                        <button class="btn btn-primary ms-2" id="search-button">Apply</button>
                     </div>
                 </div>
 				                <div class="mb-3">
@@ -258,73 +166,11 @@
         </div>
     </div>
 
-    <div class="container-fluid footer">
+	<h1 class ="book-container" id="query-title"></h1>
+    <div class="book-container" id="books-container"></div>
+
+    <div class="footer">
         Contact us at HofTAPS@gmail.com
     </div>
-
-    <script>
-        document.getElementById('search').addEventListener('input', fetchBooks);
-        document.getElementById('sort').addEventListener('change', fetchBooks);
-
-        function fetchBooks() {
-            let searchQuery = document.getElementById('search').value.toLowerCase();
-            let subjectFilter = document.getElementById('subjectFilter').value;
-            let minPrice = parseFloat(document.getElementById('minPrice').value);
-            let maxPrice = parseFloat(document.getElementById('maxPrice').value);
-            let sortOrder = document.getElementById('sort').value;
-
-            // Example data
-            let books = [
-                { title: 'PatientCare', author: 'Gregory House', isbn: '123', subject: 'Medical Prep', price: 530, condition: 'New', image: 'images/book-a.jpg' },
-                { title: 'Book B', author: 'Author B', isbn: '456', subject: 'Biology', price: 20, condition: 'Used', image: 'images/book-b.jpg' }
-                // Add more example books here
-            ];
-
-            // Filter books
-            let filteredBooks = books.filter(book => {
-                return (
-                    (subjectFilter === 'all' || book.subject === subjectFilter) &&
-                    (isNaN(minPrice) || book.price >= minPrice) &&
-                    (isNaN(maxPrice) || book.price <= maxPrice) &&
-                    (book.title.toLowerCase().includes(searchQuery) ||
-                    book.author.toLowerCase().includes(searchQuery) ||
-                    book.isbn.includes(searchQuery) ||
-                    book.subject.toLowerCase().includes(searchQuery))
-                );
-            });
-
-            // Sort books
-            if (sortOrder === "lowToHigh") {
-                filteredBooks.sort((a, b) => a.price - b.price);
-            } else {
-                filteredBooks.sort((a, b) => b.price - a.price);
-            }
-
-            displayBooks(filteredBooks);
-        }
-
-    function displayBooks(books) {
-        let bookList = document.getElementById('book-list');
-        bookList.innerHTML = "";
-        books.forEach((book) => {
-            let bookItem = document.createElement('div');
-            bookItem.className = 'book-item';
-            bookItem.innerHTML = `
-                <img src="${book.image}" alt="Book Cover">
-                <div class="book-details">
-                    <h3>${book.title}</h3>
-                    <p><strong>Author:</strong> ${book.author}</p>
-                    <p><strong>ISBN:</strong> ${book.isbn}</p>
-                    <p><strong>Subject:</strong> ${book.subject}</p>
-                    <p><strong>Price:</strong> $${book.price}</p>
-                    <p><strong>Condition:</strong> ${book.condition}</p>
-                    <p><strong>Listed by:</strong> ${book.user}</p>
-                </div>
-            `;
-            bookList.appendChild(bookItem);
-        });
-    }
-        fetchBooks();
-    </script>
 </body>
 </html>
