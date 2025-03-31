@@ -37,11 +37,42 @@ export async function displayResults() {
                 //window.location.href = "HTAPListings.html";
             };
 
+            const wishlistButton = document.createElement("button");
+            wishlistButton.className = "wishlist-button";
+            wishlistButton.textContent = "★";
+
+            // TEST CASE
+            wishlistButton.onclick = () => {
+                // Create an object with all listing details you want to save
+                const wishlistItem = {
+                    id: book.id,
+                    title: book.title,
+                    author: book.author,
+                    isbn: book.isbn_number,
+                    thumbnail: book.thumbnail,
+                    // add any other details you need
+                };
+
+                // Get current wishlist from localStorage (or initialize an empty array)
+                let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+                // Optional: Check if the item already exists to prevent duplicates
+                if (!wishlist.some(item => item.id === wishlistItem.id)) {
+                    wishlist.push(wishlistItem);
+                    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+                    alert("Added to wishlist!");
+                } else {
+                    alert("This book is already in your wishlist.");
+                }
+            };
+                
+
+
             bookCard.appendChild(img);
             bookCard.appendChild(title);
             bookCard.appendChild(author);
             bookCard.appendChild(isbn);
             bookCard.appendChild(purchaseButton);
+            bookCard.appendChild(wishlistButton);
             booksContainer.appendChild(bookCard);
         });
     } else {
