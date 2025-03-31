@@ -131,3 +131,15 @@ z-index: 1000; /* Ensure visibility */
     background-color: #E6C200;
     
 }
+
+.wishlist-button {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+}
