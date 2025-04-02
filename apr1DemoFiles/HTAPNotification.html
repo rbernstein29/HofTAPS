@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HofTAPS - Textbook Swap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    /* Remove unwanted margins and ensure full width */
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+		background-color: black;
+    }
+
+    /* Ensure container fills the entire viewport */
+    .container-fluid {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw; /* Ensure full width */
+		
+    }
+
+    /* Ensure each section spans the full width */
+    .section {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+	.top-section {
+		background-color: #2414d9;
+		height: 33.33vh;
+		color: #ffbb00;
+		-webkit-text-stroke: 0.25px white;
+		text-align: center;
+	}
+
+
+    .middle-section {
+        background-color: white;
+        height: 33.33vh;
+        text-align: center;
+    }
+
+    .bottom-section {
+        background-color: #ffbb00;
+        height: 33.33vh;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    /* Sidebar Button & Logo */
+	.sidebar-toggle-wrapper {
+		position: fixed;
+		top: 10px;
+		left: 10px;
+		display: flex;
+		align-items: center;
+		z-index: 1000;
+	}
+
+	.sidebar-logo {
+		height: 40px;
+		margin-right: 5px;
+	}
+
+	.sidebar-toggle {
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+	}
+
+    /* Notification Styling */
+    .container {
+        margin-top: 20px;
+    }
+    .notification-card {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .notification-actions {
+        margin-top: 10px;
+    }
+    .email-info {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+</style>
+
+</head>
+<body>
+	<!-- Sidebar Toggle Button with Image -->
+	<div class="sidebar-toggle-wrapper">
+		<button class="btn btn-dark sidebar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+			☰
+		</button>
+		<a href="HTAPHome.html">
+		<img src="images/logo.png" alt="HTAPS Logo" class="sidebar-logo">
+		</a>
+
+		<p style="color: #ffbb00;-webkit-text-stroke: 0.25px black;">HofTAPS</p>
+	</div>
+
+    <!-- Collapsible Sidebar -->
+    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">HofTAPS</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <a href="HTAPHome.html" class="d-block text-white text-decoration-none p-2">Home</a>
+            <a href="account.html" class="d-block text-white text-decoration-none p-2">Account</a>
+            <a href="HTAPNotification.html" class="d-block text-white text-decoration-none p-2">Notifications</a>
+            <a href="wishlist.html" class="d-block text-white text-decoration-none p-2">Wishlist</a>
+            <a href="HTAPListings.html" class="d-block text-white text-decoration-none p-2">Listings</a>
+            <a href="HTAPSell.html" class="d-block text-white text-decoration-none p-2">Sell Your Book</a>
+            <a href="#" class="d-block text-white text-decoration-none p-2">Settings</a>
+            <a href="#" class="d-block text-white text-decoration-none p-2">Help Center</a>
+        </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="container">
+        <h2 class="text-center text-white">Notifications</h2>
+        <div id="notifications-container"></div>
+    </div>
+	
+	<div class="container-fluid footer">
+        Contact us at HofTAPS@gmail.com
+    </div>
+
+    <script>
+        const notifications = [
+            { type: "offer_received", name: "Dan Mazzara", book: "PatientCare 1st ed", price: "$88.48" },
+            { type: "offer_accepted", name: "Joe Lagrassa", book: "Medical Malpractice 10th ed", email: "JLagrassa@hofstra.pride.edu" },
+            { type: "offer_lost", book: "Public Speaking by Ron Burgundy" },
+            { type: "offer_declined", book: "Calculus for Engineers" }
+        ];
+
+        function renderNotifications() {
+            const container = document.getElementById("notifications-container");
+            container.innerHTML = ""; 
+
+            notifications.forEach(notification => {
+                let notificationHTML = `<div class="notification-card">`;
+
+                if (notification.type === "offer_received") {
+                    notificationHTML += `
+                        <strong>Selling</strong><br>
+                        ${notification.name} has made you an offer of ${notification.price} on <strong>${notification.book}</strong>.
+                        <div class="notification-actions">
+                            <button class="btn btn-primary">Accept</button>
+                            <button class="btn btn-outline-primary">Decline</button>
+                        </div>
+                    `;
+                } else if (notification.type === "offer_accepted") {
+                    notificationHTML += `
+                        <strong>Buying</strong><br>
+                        ${notification.name} has accepted your offer on <strong>${notification.book}</strong>.
+                        <p class="email-info">Email them at: <a href="mailto:${notification.email}">${notification.email}</a> to arrange pick-up.</p>
+                    `;
+                } else if (notification.type === "offer_lost") {
+                    notificationHTML += `
+                        <strong>Buying</strong><br>
+                        The textbook <strong>${notification.book}</strong> has been sold to someone else.
+                    `;
+                } else if (notification.type === "offer_declined") {
+                    notificationHTML += `
+                        <strong>Buying</strong><br>
+                        Your offer on <strong>${notification.book}</strong> has been declined.
+                    `;
+                }
+
+                notificationHTML += `</div>`;
+                container.innerHTML += notificationHTML;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", renderNotifications);
+    </script>
+
+</body>
+</html>
