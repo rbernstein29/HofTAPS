@@ -12,8 +12,6 @@ const db = getFirestore(app);
 const auth = getAuth();
 
 // Elements from HTAPSell.html which are entered by the user
-const text_title = document.getElementById('title');
-const text_author = document.getElementById('author');
 const text_isbn = document.getElementById('isbn');
 const text_subject = document.getElementById('subject');
 const text_price = document.getElementById('price');
@@ -22,49 +20,72 @@ const text_description = document.getElementById('description');
 const front_cover_img = document.getElementById('frontCover');
 const back_cover_img = document.getElementById('backCover');
 const spine_img = document.getElementById('spine');
-// Publish button element
+var text_title = "";
+var text_author = "";
+var text_thumbnail = "";
+
+const isbnButton = document.getElementById('isbnButton');
 const publishButton = document.getElementById('publishButton');
+
+const userBook = document.getElementById('userBook');
+
+const isbnButtonPressed = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${text_isbn.value}`);
+    const data = await response.json(); 
+
+    // Certain information must be entered by the user
+    // Requires the user to enter an ISBN number
+    if (!data.items) {
+        text_isbn.setCustomValidity("Please enter a valid ISBN number.");
+        text_isbn.reportValidity();
+    }
+    else {
+        text_title = data.items[0].volumeInfo.title;
+        if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors; }
+        else { text_author = "Unknown Author"; }
+        if (data.items[0].volumeInfo.imageLinks) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail; }
+        else { text_thumbnail = "";}
+
+        userBook.innerHTML = ""; // Clear previous book information
+
+        const bookImage = document.createElement('img');
+        bookImage.src = text_thumbnail;
+
+        const bookTitle = document.createElement('div');
+        bookTitle.textContent = text_title;
+
+        const bookAuthor = document.createElement('div');
+        bookAuthor.textContent = text_author;
+
+        const bookISBN = document.createElement('div');
+
+        bookISBN.textContent = text_isbn.value;
+        userBook.appendChild(bookImage);
+        userBook.appendChild(bookTitle);
+        userBook.appendChild(bookAuthor);
+        userBook.appendChild(bookISBN);
+    }
+
+    publishButton.addEventListener("click", publishButtonPressed);
+
+}
 
 // Detects when the publish button is pressed and executes publishing
 const publishButtonPressed = async (e) => {
     e.preventDefault();
 
-    // Certain information must be entered by the user
-    // Requires the user to enter an ISBN number
-    if (!text_isbn.value) {
-        text_isbn.setCustomValidity("Please enter a valid ISBN number.");
-        text_isbn.reportValidity();
-    }
-    // Requires the user to enter a textbook title
-    if (!text_title.value) {
-        text_title.setCustomValidity("Please enter the textbook's title");
-        text_title.reportValidity();
-    }
-    // Requires the user to enter a textbook author
-    if (!text_author.value) {
-        text_author.setCustomValidity("Please enter the textbook's author.");
-        text_author.reportValidity();
-    }
     // Requires the user to enter a price for the textbook
     if (!text_price.value) {
         text_price.setCustomValidity("Please enter a price");
         text_price.reportValidity();
     }
 
-    // Fetches the thumbnail image of the textbook from the Google Books API
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${text_isbn.value}`);
-    const data = await response.json();
-   
-    // Checks if the ISBN was found in the Google Books API
-    // If not, the thumbnail is set to the front cover image uploaded by the user, which may be empty
-    var text_thumbnail = ""
-    if (data.items) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail } 
-    else {text_thumbnail = front_cover_img.value}
-
     // Adds the textbook with the user entered information to the textbook section in Firebase
     const docRef = await addDoc(collection(db, "Textbook Data"), {
-        title: text_title.value,                                                        // textbook title
-        author: text_author.value,                                                      // textbook author
+        title: text_title,                                                              // textbook title
+        author: text_author,                                                            // textbook author
         isbn_number: text_isbn.value,                                                   // textbook isbn number
         subject: text_subject.value,                                                    // textbook subject
         price: Number(text_price.value),                                                // textbook price
@@ -74,7 +95,7 @@ const publishButtonPressed = async (e) => {
         back_cover: back_cover_img.value,                                               // textbook back cover picture
         spine: spine_img.value,                                                         // textbook spine picture
         thumbnail: text_thumbnail,                                                      // textbook thumbnail
-        seller: auth.currentUser.email,                                                 // textbook seller
+        seller: auth.currentUser.uid,                                                   // textbook seller
     });
 
     // Adds the textbook above to the user's listings in Firebase
@@ -97,5 +118,6 @@ const publishButtonPressed = async (e) => {
     
 }
 
-publishButton.addEventListener("click", publishButtonPressed);
+isbnButton.addEventListener("click", isbnButtonPressed);
+
 

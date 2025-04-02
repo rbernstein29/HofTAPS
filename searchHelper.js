@@ -35,18 +35,34 @@ export async function fetchMatchingBooks(userQuery, minPriceQuery, maxPriceQuery
     var authorSnapshot = "";
 
     // No subject filter applied
-    if (subjectQuery == "") {
-        isbnSnapshot = await getDocs(query(listingRef, where("isbn_number", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
-        titleSnapshot = await getDocs(query(listingRef, where("title", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
-        authorSnapshot = await getDocs(query(listingRef, where("author", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
-    } else {
-        isbnSnapshot = await getDocs(query(listingRef, where("isbn_number", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
-            "price", "<=", maxPriceQuery))); // match by ISBN
-        titleSnapshot = await getDocs(query(listingRef, where("title", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
-            "price", "<=", maxPriceQuery))); // match by title
-        authorSnapshot = await getDocs(query(listingRef, where("author", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
-            "price", "<=", maxPriceQuery))); // match by author
+    if (userQuery == "") {
+        isbnSnapshot = await getDocs(query(collection(db, "Textbook Data")));
+        if (subjectQuery == "") {
+            isbnSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
+            titleSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
+            authorSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
+        } else {
+            isbnSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
+            titleSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
+            authorSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
+        }
     }
+    else {
+        if (subjectQuery == "") {
+            isbnSnapshot = await getDocs(query(listingRef, where("isbn_number", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
+            titleSnapshot = await getDocs(query(listingRef, where("title", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
+            authorSnapshot = await getDocs(query(listingRef, where("author", "==", userQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
+        } else {
+            isbnSnapshot = await getDocs(query(listingRef, where("isbn_number", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
+                "price", "<=", maxPriceQuery))); // match by ISBN
+            titleSnapshot = await getDocs(query(listingRef, where("title", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
+                "price", "<=", maxPriceQuery))); // match by title
+            authorSnapshot = await getDocs(query(listingRef, where("author", "==", userQuery), where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where(
+                "price", "<=", maxPriceQuery))); // match by author
+        }
+    }
+
+    
 
     let matchingBooks = [];
     isbnSnapshot.forEach(doc => {
