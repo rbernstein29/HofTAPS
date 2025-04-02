@@ -95,6 +95,9 @@ const signUpButtonPressed = async (e) => {
             const userCredential =  await createUserWithEmailAndPassword(auth, email_input.value, password_input.value);
             const user = userCredential.user;
             console.log(userCredential)
+
+
+            console.log(addUser(user.uid, firstname_input.value, lastname_input.value, email_input.value, h700_input.value));
     
             // Send email verification
             await sendEmailVerification(user);
@@ -108,8 +111,6 @@ const signUpButtonPressed = async (e) => {
         } catch(error) {
             console.log(error.code)
         }
-
-   addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value);
 
    
 };
@@ -228,4 +229,3 @@ document.getElementById("login-btn").addEventListener("click", async (e) => {
     loginPasswordInput.reportValidity();
   }
 });
-
