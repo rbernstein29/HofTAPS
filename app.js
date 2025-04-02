@@ -97,7 +97,8 @@ const signUpButtonPressed = async (e) => {
             console.log(userCredential)
 
 
-            console.log(addUser(firstname_input.value, lastname_input.value, email_input.value, h700_input.value));
+            console.log(addUser(user.uid, firstname_input.value, lastname_input.value, email_input.value, h700_input.value));
+
     
             // Send email verification
             await sendEmailVerification(user);
@@ -229,4 +230,3 @@ document.getElementById("login-btn").addEventListener("click", async (e) => {
     loginPasswordInput.reportValidity();
   }
 });
-
