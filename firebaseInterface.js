@@ -12,8 +12,9 @@ const db = getFirestore(app);
 
 
 // Create User Entry
-export async function addUser(f_name, l_name, mail, h_num) {
+export async function addUser(userid, f_name, l_name, mail, h_num) {
   await addDoc(collection(db, "User Data"), {
+    uid: userid,            // users unique id
     first_name: f_name,     // users first name
     last_name: l_name,      // users last name
     email: mail,            // users email
