@@ -98,7 +98,6 @@ const signUpButtonPressed = async (e) => {
 
 
             console.log(addUser(user.uid, firstname_input.value, lastname_input.value, email_input.value, h700_input.value));
-
     
             // Send email verification
             await sendEmailVerification(user);
