@@ -1,7 +1,8 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
 
 
 const app = initializeApp(firebaseConfig);
@@ -48,26 +49,25 @@ onAuthStateChanged(auth, async (user) => {
       console.error("Error reloading user data:", error);
     });
 
-    // Assume your user details are stored in "users" collection using user.uid as the document id
-    const docRef = doc(db, "User Data", uid);
-    const docSnap = await getDoc(docRef);
-     
-
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
+    const docRef = query(collection(db, "User Data"), where("uid", "==", uid));   // Gets user with matching email
+    const docSnap = await getDocs(docRef);
+    
+    const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+    if (snap) {
+      const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
+      document.getElementById("user-name").innerText = userData.first_name;
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
       document.getElementById("mail").innerText = user.email;
-      
+    
 
       document.getElementById("profile-container").style.display = "block";
-    } else {
+    } else {  // No user with email found
       console.log("DOCUMENT NOT FOUND");
     }
-    
   }
 
   console.log(auth.currentUser.uid);
