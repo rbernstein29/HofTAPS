@@ -1,0 +1,83 @@
+body {
+    background-color: #1E3A8A;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+.book-container {
+    background-color: white;
+    color: #1E3A8A;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.book-container img {
+    width: 250px;
+    height: 350px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.book-container h1 {
+    font-size: 28px;
+    margin: 10px 0;
+}
+.book-container p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+.bid-section {
+    margin-top: 20px;
+}
+.bid-input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #FFD700;
+    color: #1E3A8A;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+}
+.place-offer-button {
+    background-color: #FFD700;
+    color: #1E3A8A;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.place-offer-button:hover {
+    background-color: #e6c200;
+}
+.floating-menu {
+    background-color: #FFD700;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+.golden-btn {
+    background-color: #FFD700;
+    color: black;;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+}
+
+.golden-btn:hover {
+    background-color: #E6C200;
+    
+}
