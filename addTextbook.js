@@ -141,6 +141,7 @@ const publishButtonPressed = async (e) => {
         });
     
     }
+    window.location.href = "account.html";
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);

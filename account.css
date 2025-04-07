@@ -148,7 +148,7 @@ body, html {
     display: flex;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-    border-left: 8px solid #FFD700; /* accent */
+    border-left: 8px solid #ffbb00; /* accent */
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
@@ -162,7 +162,7 @@ body, html {
     width: 160px;
     height: 240px;
     object-fit: cover;
-    border-right: 4px solid #FFD700;
+    border-right: 4px solid #ffbb00;
   }
   
   /* Book details styling */
@@ -176,7 +176,7 @@ body, html {
     color: #e0e0e0;
   }
   .book-details p strong {
-    color: #FFD700;
+    color: #ffbb00;
   }
   /* Bold Remove Button with hover effect */
 .remove-btn {
@@ -184,8 +184,8 @@ body, html {
     bottom: 15px;
     right: 15px;
     background: transparent;
-    border: 2px solid #FFD700;
-    color: #FFD700;
+    border: 2px solid #ffbb00;
+    color: #ffbb00;
     padding: 8px 16px;
     border-radius: 30px;
     cursor: pointer;
