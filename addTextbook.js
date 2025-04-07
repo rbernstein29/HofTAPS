@@ -2,7 +2,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { collection, addDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
+import { collection, addDoc, updateDoc, arrayUnion, query, where, getDocs} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getUser } from './firebaseInterface.js';
 
@@ -76,46 +76,71 @@ const isbnButtonPressed = async (e) => {
 const publishButtonPressed = async (e) => {
     e.preventDefault();
 
+    var validPrice = false;
+    var validCondition = false;
+    var validSubject = false;
+
     // Requires the user to enter a price for the textbook
     if (!text_price.value) {
         text_price.setCustomValidity("Please enter a price");
         text_price.reportValidity();
+    } else { validPrice = true; }
+
+    if (text_condition.value == "Select Book Condition") {
+        text_condition.setCustomValidity("Please select a condition");
+        text_condition.reportValidity();
+    } else { validCondition = true; }
+
+    if (text_subject.value == "Choose Subject") {
+        text_subject.setCustomValidity("Please select a subject");
+        text_subject.reportValidity();
+    } else { validSubject = true; }
+
+    var text_seller = "";
+    const docRef = query(collection(db, "User Data"), where("email", "==", auth.currentUser.email));   // Gets user with matching email
+    const docSnap = await getDocs(docRef);
+    
+    const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+    if (snap) {
+        text_seller = snap.data();
     }
 
-    // Adds the textbook with the user entered information to the textbook section in Firebase
-    const docRef = await addDoc(collection(db, "Textbook Data"), {
-        title: text_title,                                                              // textbook title
-        author: text_author,                                                            // textbook author
-        isbn_number: text_isbn.value,                                                   // textbook isbn number
-        subject: text_subject.value,                                                    // textbook subject
-        price: Number(text_price.value),                                                // textbook price
-        condition: text_condition.value,                                                // textbook condition
-        description: text_description.value,                                            // textbook description
-        front_cover: front_cover_img.value,                                             // textbook front cover picture
-        back_cover: back_cover_img.value,                                               // textbook back cover picture
-        spine: spine_img.value,                                                         // textbook spine picture
-        thumbnail: text_thumbnail,                                                      // textbook thumbnail
-        seller: auth.currentUser.uid,                                                   // textbook seller
-    });
+    if (validPrice && validCondition && validSubject) {
+        // Adds the textbook with the user entered information to the textbook section in Firebase
+        const docRef = await addDoc(collection(db, "Textbook Data"), {
+            title: text_title,                                                              // textbook title
+            author: text_author,                                                            // textbook author
+            isbn_number: text_isbn.value,                                                   // textbook isbn number
+            subject: text_subject.value,                                                    // textbook subject
+            price: Number(text_price.value),                                                // textbook price
+            condition: text_condition.value,                                                // textbook condition
+            description: text_description.value,                                            // textbook description
+            front_cover: front_cover_img.value,                                             // textbook front cover picture
+            back_cover: back_cover_img.value,                                               // textbook back cover picture
+            spine: spine_img.value,                                                         // textbook spine picture
+            thumbnail: text_thumbnail,                                                      // textbook thumbnail
+            seller: text_seller,                                                            // textbook seller
+        });
 
-    // Adds the textbook above to the user's listings in Firebase
-    onAuthStateChanged(auth, (user) => {
-        getUser(user.email)
-        .then((result) => {
-            const addListing = async () => {
-                try {
-                    // Adds new listing to user's listings
-                    await updateDoc(result, {
-                        listings: arrayUnion(docRef)
-                    });
-                } catch (error) {
-                    console.error("Error updating user listings:", error);
+        // Adds the textbook above to the user's listings in Firebase
+        onAuthStateChanged(auth, (user) => {
+            getUser(user.email)
+            .then((result) => {
+                const addListing = async () => {
+                    try {
+                        // Adds new listing to user's listings
+                        await updateDoc(result, {
+                            listings: arrayUnion(docRef)
+                        });
+                    } catch (error) {
+                        console.error("Error updating user listings:", error);
+                    }
                 }
-            }
-        addListing();
-        })
-    });
+            addListing();
+            })
+        });
     
+    }
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);

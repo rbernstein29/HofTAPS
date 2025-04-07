@@ -35,7 +35,7 @@ body, html {
     padding: 10px;
     font-size: 14px;
 }
-    /* Wrapper for button and logo */
+/* Wrapper for button and logo */
 .sidebar-toggle-wrapper {
 position: fixed;
 top: 10px; /* Adjust vertical position */
@@ -108,7 +108,7 @@ z-index: 1000; /* Ensure visibility */
     font-size: 14px;
     margin-top: 5px;
 }
-.purchase-button {
+.view-button {
     background-color: #FFD700;
     color: #1E3A8A;
     font-weight: bold;
@@ -130,16 +130,4 @@ z-index: 1000; /* Ensure visibility */
 .golden-btn:hover {
     background-color: #E6C200;
     
-}
-
-.wishlist-button {
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-left: 10px;
 }

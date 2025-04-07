@@ -63,7 +63,7 @@ async function deleteUser(toDelete) {
 }
 
 // Delete Textbook Entry
-async function deleteTextbook(toDelete) {
+export async function deleteTextbook(toDelete) {
   const docRef = doc(db, "Textbook Data", toDelete);
   const docSnap = await getDoc(docRef);
 

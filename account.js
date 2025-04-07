@@ -2,7 +2,7 @@ import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
+import { purchaseBook } from "./purchaseTextbook.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -39,7 +39,7 @@ let isEditing = false;
 // Retrieve and display user data on account page
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const uid = user.uid;
+    const email = user.email;
 
     // Refresh user auth data
     user.reload().then(() => {
@@ -49,7 +49,7 @@ onAuthStateChanged(auth, async (user) => {
       console.error("Error reloading user data:", error);
     });
 
-    const docRef = query(collection(db, "User Data"), where("uid", "==", uid));   // Gets user with matching email
+    const docRef = query(collection(db, "User Data"), where("email", "==", email));   // Gets user with matching email
     const docSnap = await getDocs(docRef);
     
     const snap = docSnap.docs[0];     // There should only be one result - each email is unique
@@ -61,13 +61,59 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
-      document.getElementById("mail").innerText = user.email;
     
 
       document.getElementById("profile-container").style.display = "block";
+
+      const listings = document.getElementById("books-container");
+      userData.listings.forEach(async (result) => {
+        const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
+        const bookSnap = await getDoc(bookRef);  // Get the document snapshot
+        const book = bookSnap.data();
+
+        const bookCard = document.createElement("div");
+        bookCard.className = "book-card";
+
+        const img = document.createElement("img");
+        img.src = book.thumbnail;
+
+        const details = document.createElement("div");
+        details.className = "book-details";
+
+        // Create detail elements for each piece of information
+        const title = document.createElement("p");
+        title.innerHTML = `<strong>Title:</strong> ${book.title}`;
+
+        const author = document.createElement("p");
+        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+
+        const isbn = document.createElement("p");
+        isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-btn";
+        removeButton.innerText = "Remove";
+        removeButton.onclick = async () => {
+          purchaseBook(bookRef.id);
+
+          // Remove the book card from the DOM
+          listings.removeChild(bookCard);
+        }
+
+        // Append details to the details container
+        details.appendChild(title);
+        details.appendChild(author);
+        details.appendChild(isbn);
+        bookCard.appendChild(img);
+        bookCard.appendChild(details);
+        bookCard.appendChild(removeButton);
+        listings.appendChild(bookCard);
+      }); 
     } else {  // No user with email found
       console.log("DOCUMENT NOT FOUND");
     }
+
+
   }
 
   console.log(auth.currentUser.uid);
