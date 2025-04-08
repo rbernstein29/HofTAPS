@@ -43,7 +43,7 @@ const isbnButtonPressed = async (e) => {
     }
     else {
         text_title = data.items[0].volumeInfo.title;
-        if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors; }
+        if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors.toString(); }
         else { text_author = "Unknown Author"; }
         if (data.items[0].volumeInfo.imageLinks) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail; }
         else { text_thumbnail = "";}
@@ -137,11 +137,11 @@ const publishButtonPressed = async (e) => {
                     }
                 }
             addListing();
+            window.location.href = "account.html";
             })
         });
     
     }
-    window.location.href = "account.html";
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);

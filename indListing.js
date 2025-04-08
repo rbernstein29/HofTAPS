@@ -1,4 +1,13 @@
 import { purchaseBook } from "./purchaseTextbook.js";
+import { firebaseConfig } from './hoftapsFirebaseConfig.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getUser } from './firebaseInterface.js';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const result = JSON.parse(localStorage.indListing);
 
@@ -36,24 +45,55 @@ purchaseButton.onclick = () => {
 
 const wishlistButton = document.getElementById("wishlist-button");
 wishlistButton.onclick = () => {
-    const wishlistItem = {
-        id: result.id,
-        title: result.title,
-        author: result.author,
-        isbn: result.isbn_number,
-        thumbnail: result.thumbnail,
-    };
-
-    // Get current wishlist from localStorage (or initialize an empty array)
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    // Optional: Check if the item already exists to prevent duplicates
-    if (!wishlist.some(item => item.id === wishlistItem.id)) {
-        wishlist.push(wishlistItem);
-        localStorage.setItem("wishlist", JSON.stringify(wishlist));
-        alert.innerHTML = "Added to wishlist!";
-        setTimeout(() => { alert.innerHTML = ""; }, 3000);
-    } else {
-        alert.innerHTML = "Item already in wishlist!";
-        setTimeout(() => { alert.innerHTML = ""; }, 3000);
-    }
+    onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const email = user.email;
+        
+                // Refresh user auth data
+                user.reload().then(() => {
+                // Access updated user info if needed, e.g., user.emailVerified
+                console.log("User data reloaded successfully.");
+                }).catch((error) => {
+                console.error("Error reloading user data:", error);
+                });
+        
+                const docRef = query(collection(db, "User Data"), where("email", "==", email));   // Gets user with matching email
+                const docSnap = await getDocs(docRef);
+            
+                const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+                if (snap) {
+                    const userData = snap.data();
+                    console.log("User data retrieved:", userData);
+            
+                    const wishlist = userData.wishlist || [];
+            
+                    if (wishlist.includes(result) == false) {
+                        onAuthStateChanged(auth, (user) => {
+                                    getUser(user.email)
+                                    .then((currUser) => {
+                                        const addListing = async () => {
+                                            try {
+                                                // Adds new listing to user's listings
+                                                await updateDoc(currUser, {
+                                                    wishlist: arrayUnion(result)
+                                                });
+                                                alert.innerHTML = "Added to wishlist!";
+                                                setTimeout(() => { alert.innerHTML = ""; }, 3000);
+                                            } catch (error) {
+                                                console.error("Error updating user listings:", error);
+                                            }
+                                        }
+                                    addListing();
+                                    })
+                                });
+                    } else {
+                        alert.innerHTML = "Item already in wishlist!";
+                        setTimeout(() => { alert.innerHTML = ""; }, 3000);
+                    }
+                } else {  // No user with email found
+                    console.log("DOCUMENT NOT FOUND");
+                  }
+            }
+        });
+    
 };
