@@ -105,7 +105,11 @@ const signUpButtonPressed = async (e) => {
             // Display a message to the user
             alert("Verification email sent. Check your inbox.");
 
-            window.location.href = "HTAPHome.html";
+            onAuthStateChanged(auth, (user) => {
+              if (user.emailVerified) {
+                window.location.href = "HTAPHome.html";
+              }
+            });
 
     
         } catch(error) {

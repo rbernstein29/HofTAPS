@@ -1,7 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -48,13 +48,14 @@ onAuthStateChanged(auth, async (user) => {
       console.error("Error reloading user data:", error);
     });
 
-    // Assume your user details are stored in "users" collection using user.uid as the document id
-    const docRef = doc(db, "User Data", uid);
-    const docSnap = await getDoc(docRef);
+    const docRef = query(collection(db, "User Data"), where("uid", "==", uid));   // Gets user with matching email
+    const docSnap = await getDocs(docRef);
+    
+    const snap = docSnap.docs[0];     // There should only be one result - each email is unique
      
 
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
+    if (snap) {
+      const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
       document.getElementById("h_num").innerText = userData.h_number;
@@ -67,45 +68,45 @@ onAuthStateChanged(auth, async (user) => {
 
       //listings
       const listings = document.getElementById("books-container");
-     userData.listings.forEach(async (result) => {
-       const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
-       const bookSnap = await getDoc(bookRef);  // Get the document snapshot
-       const book = bookSnap.data();
+      userData.listings.forEach(async (result) => {
+        const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
+        const bookSnap = await getDoc(bookRef);  // Get the document snapshot
+        const book = bookSnap.data();
 
 
-       const bookCard = document.createElement("div");
-       bookCard.className = "book-card";
+        const bookCard = document.createElement("div");
+        bookCard.className = "book-card";
 
 
-       const img = document.createElement("img");
-       img.src = book.thumbnail;
+        const img = document.createElement("img");
+        img.src = book.thumbnail;
 
 
-       const details = document.createElement("div");
-       details.className = "book-details";
+        const details = document.createElement("div");
+        details.className = "book-details";
 
 
-       // Create detail elements for each piece of information
-       const title = document.createElement("p");
-       title.innerHTML = `<strong>Title:</strong> ${book.title}`;
+        // Create detail elements for each piece of information
+        const title = document.createElement("p");
+        title.innerHTML = `<strong>Title:</strong> ${book.title}`;
 
 
-       const author = document.createElement("p");
-       author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+        const author = document.createElement("p");
+        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
 
 
-       const isbn = document.createElement("p");
-       isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
+        const isbn = document.createElement("p");
+        isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
 
 
-       const removeButton = document.createElement("button");
-       removeButton.className = "remove-btn";
-       removeButton.innerText = "Remove";
-       removeButton.onclick = async () => {
-         purchaseBook(bookRef.id);
-         // Remove the book card from the DOM
-         listings.removeChild(bookCard);
-       };
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-btn";
+        removeButton.innerText = "Remove";
+        removeButton.onclick = async () => {
+          purchaseBook(bookRef.id);
+          // Remove the book card from the DOM
+          listings.removeChild(bookCard);
+        };
 
 
        // Append details to the details container
@@ -129,25 +130,6 @@ onAuthStateChanged(auth, async (user) => {
 
 
 }); 
-
-
-
-
-/*
-const dummyData = {
-  h_number: "H700123456",
-  first_name: "John",
-  last_name: "Doe",
-  email: "john.doe@example.com"
-};
-
-document.getElementById("h_num").innerText = dummyData.h_number;
-document.getElementById("f_name").innerText = dummyData.first_name;
-document.getElementById("l_name").innerText = dummyData.last_name;
-document.getElementById("mail").innerText = dummyData.email;
-
-document.getElementById("profile-container").style.display = "block";
-*/
 
 // Edit button functionality with enhanced logging
 document.querySelector('.edit-btn').addEventListener('click', async () => {
@@ -183,7 +165,11 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
     try {
       // Update Firestore document; email is not updated
-      const userDocRef = doc(db, "User Data", auth.currentUser.uid);
+      const docRef = query(collection(db, "User Data"), where("uid", "==", auth.currentUser.uid));   // Gets user with matching email
+      const docSnap = await getDocs(docRef);
+    
+      const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+      const userDocRef = doc(db, "User Data", snap.id);
       await updateDoc(userDocRef, {
         h_number: hNumNew,
         first_name: fNameNew,
