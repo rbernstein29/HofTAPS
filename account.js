@@ -108,6 +108,12 @@ onAuthStateChanged(auth, async (user) => {
           listings.removeChild(bookCard);
         };
 
+        bookCard.onclick = () => {
+          localStorage.indListing = JSON.stringify(book);
+
+          window.location.href = "indListing.html";
+        }
+
 
        // Append details to the details container
        details.appendChild(title);

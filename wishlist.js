@@ -87,6 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         bookCard.remove();
                     };
 
+                    bookCard.onclick = () => {
+                        localStorage.indListing = JSON.stringify(item);
+        
+                        window.location.href = "indListing.html";
+                    }
+
                     bookCard.appendChild(img);
                     bookCard.appendChild(details);
                     bookCard.appendChild(removeBtn);
