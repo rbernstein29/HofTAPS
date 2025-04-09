@@ -140,6 +140,28 @@ body, html {
     background-color: #0056b3;
 }
 
+
+.reset-password {
+    left: 45%;
+    top: 40%;
+    display: none;
+    position: absolute;
+    padding: 10px 20px;
+    background-color: #ffbb00;
+    color: #0d1b2a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: left;
+}
+
+.reset-password:hover {
+  background-color: #a47900;
+}
+
+
+
 /* Dramatic Book Card styling */
 .book-card {
     background: linear-gradient(145deg, #1b263b, #0d1b2a);

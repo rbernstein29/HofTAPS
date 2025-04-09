@@ -1,6 +1,6 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
@@ -155,6 +155,10 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
     document.querySelector('.edit-btn').innerText = "Save";
     isEditing = true;
     console.log("Switched to edit mode.");
+
+    // show reset password button
+    document.querySelector(".reset-password").style.display = "block";
+
   } else {
     // Retrieve new input values
     const hNumNew = document.getElementById("h_num_input").value;
@@ -192,9 +196,35 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
       document.querySelector('.edit-btn').innerText = "Edit Profile";
       isEditing = false;
       console.log("Switched back to view mode.");
+
+      // Hide reset password button
+      document.querySelector(".reset-password").style.display = "none";
     } catch (error) {
       console.error("Error updating profile:", error);
       // Optionally, you can show an error message on the UI
     }
+  }
+});
+
+
+// Password reset functionality for a logged-in user
+document.querySelector(".reset-password").addEventListener("click", async () => {
+  if (auth.currentUser && auth.currentUser.email) {
+    // Get the current authenticated user email
+    const userEmail = auth.currentUser.email;
+    try {
+      // Send the password reset email
+      await sendPasswordResetEmail(auth, userEmail);
+      console.log("Password reset email sent successfully to:", userEmail);
+      alert("A password reset email has been sent to " + userEmail + ". Please check your inbox (and spam folder).");
+    } catch (error) {
+      // Show any errors
+      console.error("Error sending password reset email:", error);
+      alert("Error sending password reset email: " + error.message);
+    }
+  } else {
+    // error case for user not logged in
+    console.error("No user logged in.");
+    alert("No user is currently logged in.");
   }
 });
