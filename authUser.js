@@ -15,4 +15,31 @@ export async function authUser() {
     onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.href = "app.html"; } 
           });
+    logoutUser();
+}
+
+export async function logoutUser() {
+  let logoutTimer;
+  const inactivityTime = 900000; // 15 minutes (in milliseconds)
+
+  function resetTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(logout, inactivityTime);
+  }
+
+  function logout() {
+    auth.signOut().then(() => {
+      // Sign-out successful.
+      console.log('User logged out due to inactivity.');
+      window.location.href = "app.html"; // Redirect to the login page
+    }).catch((error) => {
+      console.error('Error logging out:', error);
+    });
+  }
+
+  window.addEventListener('mousemove', resetTimer);
+  window.addEventListener('keypress', resetTimer);
+
+  // Start the timer initially
+  resetTimer();
 }

@@ -5,11 +5,14 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase
 import { collection, addDoc, updateDoc, arrayUnion, query, where, getDocs} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getUser } from './firebaseInterface.js';
+import { authUser } from './authUser.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
+
+authUser(); // Checks if user is signed in
 
 // Elements from HTAPSell.html which are entered by the user
 const text_isbn = document.getElementById('isbn');

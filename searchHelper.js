@@ -1,10 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { firebaseConfig } from "./hoftapsFirebaseConfig.js";
+import { logoutUser } from './authUser.js';  
 
 // Initialize Firebase and Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+logoutUser(); // Checks if user is signed in
 
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
@@ -36,15 +39,11 @@ export async function fetchMatchingBooks(userQuery, minPriceQuery, maxPriceQuery
 
     // No subject filter applied
     if (userQuery == "") {
-        isbnSnapshot = await getDocs(query(collection(db, "Textbook Data")));
         if (subjectQuery == "") {
-            isbnSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
-            titleSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
-            authorSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
+            isbnSnapshot = await getDocs(query(listingRef, where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery)));
         } else {
-            isbnSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by ISBN
-            titleSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by title
-            authorSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery))); // match by author
+            isbnSnapshot = await getDocs(query(listingRef, where("subject", "==", subjectQuery), where("price", ">=", minPriceQuery), where("price", "<=", maxPriceQuery)));
+  
         }
     }
     else {
@@ -65,15 +64,21 @@ export async function fetchMatchingBooks(userQuery, minPriceQuery, maxPriceQuery
     
 
     let matchingBooks = [];
-    isbnSnapshot.forEach(doc => {
-        matchingBooks.push({ ...doc.data(), id: doc.id, isbnData: userQuery })
-    });
-    titleSnapshot.forEach(doc => {
-        matchingBooks.push({ ...doc.data(), id: doc.id, titleData: userQuery })
-    });
-    authorSnapshot.forEach(doc => {
-        matchingBooks.push({ ...doc.data(), id: doc.id, authorData: userQuery })
-    });
+    if (isbnSnapshot) {
+        isbnSnapshot.forEach(doc => {
+            matchingBooks.push({ ...doc.data(), id: doc.id, isbnData: userQuery })
+        });
+    }
+    if (titleSnapshot) {
+        titleSnapshot.forEach(doc => {
+            matchingBooks.push({ ...doc.data(), id: doc.id, isbnData: userQuery })
+        });
+    }
+    if (authorSnapshot) {
+        authorSnapshot.forEach(doc => {
+            matchingBooks.push({ ...doc.data(), id: doc.id, isbnData: userQuery })
+        });
+    }
 
     return matchingBooks;
 }
