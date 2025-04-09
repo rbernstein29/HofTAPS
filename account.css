@@ -35,8 +35,7 @@ body, html {
 
 
 .middle-section {
-    background-color: white;
-    height: 33.33vh;
+    color: #ffbb00;
     text-align: center;
 }
 
@@ -111,8 +110,8 @@ body, html {
     margin: 100px auto;
     padding: 20px;
     border-radius: 10px;
-    color: black;
-    background: white;
+    color: #ffbb00;
+    background: #2414d9;
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -139,4 +138,99 @@ body, html {
 }
 .edit-btn:hover {
     background-color: #0056b3;
+}
+
+
+.reset-password {
+    left: 45%;
+    top: 40%;
+    display: none;
+    position: absolute;
+    padding: 10px 20px;
+    background-color: #ffbb00;
+    color: #0d1b2a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: left;
+}
+
+.reset-password:hover {
+  background-color: #a47900;
+}
+
+
+/* Dramatic Book Card styling */
+.book-card {
+    background: linear-gradient(145deg, #1b263b, #0d1b2a);
+    border-radius: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border-left: 8px solid #ffbb00; /* accent */
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .book-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 15px 30px rgba(255, 215, 0, 0.6);
+  }
+  
+  /* Book image styling */
+  .book-image {
+    width: 160px;
+    height: 240px;
+    object-fit: cover;
+    border-right: 4px solid #ffbb00;
+  }
+  
+  /* Book details styling */
+  .book-details {
+    padding: 20px;
+    flex: 1;
+  }
+  .book-details p {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+  }
+  .book-details p strong {
+    color: #ffbb00;
+  }
+  /* Bold Remove Button with hover effect */
+.remove-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: transparent;
+    border: 2px solid #ffbb00;
+    color: #ffbb00;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .remove-btn:hover {
+    background: #FFD700;
+    color: #0d1b2a;
+  }
+  /* Responsive design adjustments */
+@media (max-width: 768px) {
+    .book-card {
+      flex-direction: column;
+    }
+    .book-image {
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 4px solid #FFD700;
+    }
+    .book-details {
+      padding: 15px;
+      text-align: center;
+    }
 }

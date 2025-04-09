@@ -6,6 +6,7 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     sendEmailVerification,
+    sendPasswordResetEmail,
     onAuthStateChanged,
     signOut,
     signInWithEmailAndPassword
@@ -175,6 +176,54 @@ document.getElementById("show-signup-btn").addEventListener("click", () => {
 
 
 });
+
+// This code shows and hides the reset password container dynamically
+
+document.getElementById("reset-passlog").addEventListener("click", () => {
+  // Hide login container
+  document.querySelector(".login-container").style.display = "none";
+
+  // Show reset password container
+  document.querySelector(".reset-pass").style.display = "block";
+
+});
+
+document.getElementById("goback-btn").addEventListener("click", () => {
+  // Hide reset password container
+  document.querySelector(".reset-pass").style.display = "none";
+
+  // Show login container
+  document.querySelector(".login-container").style.display = "block";
+});
+
+// Function for resetting password (not logged in)
+document.getElementById("reset-btn").addEventListener("click", async (e) => {
+  e.preventDefault(); // Prevent default form submission behavior
+
+  // Get the value of the email input from the reset password container
+  const emailInput = document.querySelector(".reset-pass input[name='email']");
+  const userEmail = emailInput.value.trim();
+
+  // Check if the email is not empty (optional validation)
+  if (!userEmail) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, userEmail);
+    console.log("Password reset email sent successfully to:", userEmail);
+    alert("A password reset email has been sent to " + userEmail + ". Please check your inbox (and spam folder).");
+  } catch (error) {
+    // Handle errors: log them and alert the user
+    console.error("Error sending password reset email:", error.code, error.message);
+    // Optionally, display the error in the UI:
+    document.getElementById("reset-error-message").textContent = "There was an error";
+  }
+});
+
+
+// This handles the login process
 
 document.getElementById("login-btn").addEventListener("click", async (e) => {
   e.preventDefault(); // Prevent default form submission behavior

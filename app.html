@@ -210,6 +210,7 @@
       <input type="submit" id="signup-btn" value="Sign Up">
 
       <p>Already have an account? <button id="show-signin-btn">Sign In</button></p>
+  
     </div>
   </div>
 
@@ -238,6 +239,27 @@
       <p id="login-error-message" style="color:red;"></p>
 
       <p>Want to create an account? <button id="show-signup-btn">Sign Up</button></p>
+
+      <!-- Reset Password if not logged in-->
+      <p>Forgot your password? <button id="reset-passlog">Reset Password</button></p>
+    </div>
+  </div>
+
+   <!-- Container For Resetting Password (not logged in)-->
+  <div class="reset-pass" action="#" method="post">
+    <div id = "reset-passlog">
+
+      <h2>Reset Password</h2>
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" required>
+
+      <input type="submit" id="reset-btn" value="Reset Password">
+
+      <input type="submit" id="goback-btn" value="Go Back">
+
+      <p id="reset-error-message" style="color:red;"></p>
+
     </div>
   </div>
 

@@ -1,8 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
 
 
 const app = initializeApp(firebaseConfig);
@@ -53,46 +52,84 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDocs(docRef);
     
     const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+     
+
     if (snap) {
       const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
-      document.getElementById("user-name").innerText = userData.first_name;
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
       document.getElementById("mail").innerText = user.email;
-    
+      
 
       document.getElementById("profile-container").style.display = "block";
-    } else {  // No user with email found
+
+      //listings
+      const listings = document.getElementById("books-container");
+      userData.listings.forEach(async (result) => {
+        const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
+        const bookSnap = await getDoc(bookRef);  // Get the document snapshot
+        const book = bookSnap.data();
+
+
+        const bookCard = document.createElement("div");
+        bookCard.className = "book-card";
+
+
+        const img = document.createElement("img");
+        img.src = book.thumbnail;
+
+
+        const details = document.createElement("div");
+        details.className = "book-details";
+
+
+        // Create detail elements for each piece of information
+        const title = document.createElement("p");
+        title.innerHTML = `<strong>Title:</strong> ${book.title}`;
+
+
+        const author = document.createElement("p");
+        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+
+
+        const isbn = document.createElement("p");
+        isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
+
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-btn";
+        removeButton.innerText = "Remove";
+        removeButton.onclick = async () => {
+          purchaseBook(bookRef.id);
+          // Remove the book card from the DOM
+          listings.removeChild(bookCard);
+        };
+
+
+       // Append details to the details container
+       details.appendChild(title);
+       details.appendChild(author);
+       details.appendChild(isbn);
+       bookCard.appendChild(img);
+       bookCard.appendChild(details);
+       bookCard.appendChild(removeButton);
+       listings.appendChild(bookCard);
+     });
+
+      
+    } else {
       console.log("DOCUMENT NOT FOUND");
     }
+    
   }
 
   console.log(auth.currentUser.uid);
 
 
 }); 
-
-
-
-
-/*
-const dummyData = {
-  h_number: "H700123456",
-  first_name: "John",
-  last_name: "Doe",
-  email: "john.doe@example.com"
-};
-
-document.getElementById("h_num").innerText = dummyData.h_number;
-document.getElementById("f_name").innerText = dummyData.first_name;
-document.getElementById("l_name").innerText = dummyData.last_name;
-document.getElementById("mail").innerText = dummyData.email;
-
-document.getElementById("profile-container").style.display = "block";
-*/
 
 // Edit button functionality with enhanced logging
 document.querySelector('.edit-btn').addEventListener('click', async () => {
@@ -118,6 +155,10 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
     document.querySelector('.edit-btn').innerText = "Save";
     isEditing = true;
     console.log("Switched to edit mode.");
+
+    // show reset password button
+    document.querySelector(".reset-password").style.display = "block";
+
   } else {
     // Retrieve new input values
     const hNumNew = document.getElementById("h_num_input").value;
@@ -128,7 +169,11 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
     try {
       // Update Firestore document; email is not updated
-      const userDocRef = doc(db, "User Data", auth.currentUser.uid);
+      const docRef = query(collection(db, "User Data"), where("uid", "==", auth.currentUser.uid));   // Gets user with matching email
+      const docSnap = await getDocs(docRef);
+    
+      const snap = docSnap.docs[0];     // There should only be one result - each email is unique
+      const userDocRef = doc(db, "User Data", snap.id);
       await updateDoc(userDocRef, {
         h_number: hNumNew,
         first_name: fNameNew,
@@ -151,9 +196,35 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
       document.querySelector('.edit-btn').innerText = "Edit Profile";
       isEditing = false;
       console.log("Switched back to view mode.");
+
+      // Hide reset password button
+      document.querySelector(".reset-password").style.display = "none";
     } catch (error) {
       console.error("Error updating profile:", error);
       // Optionally, you can show an error message on the UI
     }
+  }
+});
+
+
+// Password reset functionality for a logged-in user
+document.querySelector(".reset-password").addEventListener("click", async () => {
+  if (auth.currentUser && auth.currentUser.email) {
+    // Get the current authenticated user email
+    const userEmail = auth.currentUser.email;
+    try {
+      // Send the password reset email
+      await sendPasswordResetEmail(auth, userEmail);
+      console.log("Password reset email sent successfully to:", userEmail);
+      alert("A password reset email has been sent to " + userEmail + ". Please check your inbox (and spam folder).");
+    } catch (error) {
+      // Show any errors
+      console.error("Error sending password reset email:", error);
+      alert("Error sending password reset email: " + error.message);
+    }
+  } else {
+    // error case for user not logged in
+    console.error("No user logged in.");
+    alert("No user is currently logged in.");
   }
 });
