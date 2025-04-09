@@ -1,10 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { firebaseConfig } from "./hoftapsFirebaseConfig.js";
+import { logoutUser } from './authUser.js';  
 
 // Initialize Firebase and Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+logoutUser(); // Checks if user is signed in
 
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");

@@ -58,10 +58,11 @@ onAuthStateChanged(auth, async (user) => {
       const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
+      document.getElementById("name").innerText = userData.first_name;
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
-      document.getElementById("mail").innerText = user.email;
+      document.getElementById("email").innerText = user.email;
       
 
       document.getElementById("profile-container").style.display = "block";
@@ -92,8 +93,10 @@ onAuthStateChanged(auth, async (user) => {
 
 
         const author = document.createElement("p");
-        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+        author.innerHTML = `${book.author}`;
 
+        const price = document.createElement("p");
+        price.innerHTML = `<strong>$${book.price}</strong>`;
 
         const isbn = document.createElement("p");
         isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
@@ -118,6 +121,7 @@ onAuthStateChanged(auth, async (user) => {
        // Append details to the details container
        details.appendChild(title);
        details.appendChild(author);
+       details.appendChild(price);
        details.appendChild(isbn);
        bookCard.appendChild(img);
        bookCard.appendChild(details);
@@ -143,17 +147,14 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
   // Toggle to edit mode
   if (!isEditing) {
-    const hNumSpan = document.getElementById("h_num");
     const fNameSpan = document.getElementById("f_name");
     const lNameSpan = document.getElementById("l_name");
 
     // Get current values
-    const hNumVal = hNumSpan.innerText;
     const fNameVal = fNameSpan.innerText;
     const lNameVal = lNameSpan.innerText;
 
     // Replace text with input fields
-    hNumSpan.innerHTML = `<input type="text" id="h_num_input" value="${hNumVal}" />`;
     fNameSpan.innerHTML = `<input type="text" id="f_name_input" value="${fNameVal}" />`;
     lNameSpan.innerHTML = `<input type="text" id="l_name_input" value="${lNameVal}" />`;
 
@@ -167,11 +168,10 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
   } else {
     // Retrieve new input values
-    const hNumNew = document.getElementById("h_num_input").value;
     const fNameNew = document.getElementById("f_name_input").value;
     const lNameNew = document.getElementById("l_name_input").value;
 
-    console.log("Attempting to save new data:", { hNumNew, fNameNew, lNameNew });
+    console.log("Attempting to save new data:", { fNameNew, lNameNew });
 
     try {
       // Update Firestore document; email is not updated
@@ -181,7 +181,6 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
       const snap = docSnap.docs[0];     // There should only be one result - each email is unique
       const userDocRef = doc(db, "User Data", snap.id);
       await updateDoc(userDocRef, {
-        h_number: hNumNew,
         first_name: fNameNew,
         last_name: lNameNew
       });
@@ -194,7 +193,6 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
 
       // Revert input fields back to plain text
-      document.getElementById("h_num").innerText = hNumNew;
       document.getElementById("f_name").innerText = fNameNew;
       document.getElementById("l_name").innerText = lNameNew;
 

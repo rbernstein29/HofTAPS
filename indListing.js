@@ -4,10 +4,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { getUser } from './firebaseInterface.js';
+import { authUser } from './authUser.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+authUser(); // Checks if user is signed in
 
 const result = JSON.parse(localStorage.indListing);
 

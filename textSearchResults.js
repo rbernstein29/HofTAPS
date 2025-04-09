@@ -21,13 +21,13 @@ booksContainer.innerHTML = "";
             title.innerHTML = `<strong>Title:</strong> ${book.title}`;
 
             const author = document.createElement("p");
-            author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+            author.innerHTML = `${book.author}`;
+
+            const price = document.createElement("p");
+            price.innerHTML = `<strong>$${book.price}</strong>`;
 
             const isbn = document.createElement("p");
             isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
-
-            const price = document.createElement("p");
-            price.innerHTML = `<strong>$</strong> ${book.price}`;
 
             bookCard.onclick = () => {
                 localStorage.indListing = JSON.stringify(book);
@@ -37,8 +37,8 @@ booksContainer.innerHTML = "";
                 
             details.appendChild(title);
             details.appendChild(author);
-            details.appendChild(isbn);
             details.appendChild(price);
+            details.appendChild(isbn);
             bookCard.appendChild(img);
             bookCard.appendChild(details);
             booksContainer.appendChild(bookCard);
