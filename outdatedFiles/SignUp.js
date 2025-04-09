@@ -1,5 +1,5 @@
-import { addUser } from './firebaseInterface.js';
-import { firebaseConfig } from './hoftapsFirebaseConfig.js';
+import { addUser } from '../firebaseInterface.js';
+import { firebaseConfig } from '../hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 
 import { 

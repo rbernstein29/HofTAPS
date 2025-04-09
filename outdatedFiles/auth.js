@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { firebaseConfig } from "./hoftapsFirebaseConfig";
+import { firebaseConfig } from "../hoftapsFirebaseConfig";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
