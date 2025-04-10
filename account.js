@@ -1,7 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -58,11 +58,10 @@ onAuthStateChanged(auth, async (user) => {
       const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
-      document.getElementById("name").innerText = userData.first_name;
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
-      document.getElementById("email").innerText = user.email;
+      document.getElementById("mail").innerText = user.email;
       
 
       document.getElementById("profile-container").style.display = "block";
@@ -89,14 +88,12 @@ onAuthStateChanged(auth, async (user) => {
 
         // Create detail elements for each piece of information
         const title = document.createElement("p");
-        title.innerHTML = `<strong>${book.title}</strong>`;
+        title.innerHTML = `<strong>Title:</strong> ${book.title}`;
 
 
         const author = document.createElement("p");
-        author.innerHTML = `${book.author}`;
+        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
 
-        const price = document.createElement("p");
-        price.innerHTML = `<strong>$${book.price}</strong>`;
 
         const isbn = document.createElement("p");
         isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
@@ -111,17 +108,10 @@ onAuthStateChanged(auth, async (user) => {
           listings.removeChild(bookCard);
         };
 
-        bookCard.onclick = () => {
-          localStorage.indListing = JSON.stringify(book);
-
-          window.location.href = "indListing.html";
-        }
-
 
        // Append details to the details container
        details.appendChild(title);
        details.appendChild(author);
-       details.appendChild(price);
        details.appendChild(isbn);
        bookCard.appendChild(img);
        bookCard.appendChild(details);
@@ -147,14 +137,17 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
   // Toggle to edit mode
   if (!isEditing) {
+    const hNumSpan = document.getElementById("h_num");
     const fNameSpan = document.getElementById("f_name");
     const lNameSpan = document.getElementById("l_name");
 
     // Get current values
+    const hNumVal = hNumSpan.innerText;
     const fNameVal = fNameSpan.innerText;
     const lNameVal = lNameSpan.innerText;
 
     // Replace text with input fields
+    hNumSpan.innerHTML = `<input type="text" id="h_num_input" value="${hNumVal}" />`;
     fNameSpan.innerHTML = `<input type="text" id="f_name_input" value="${fNameVal}" />`;
     lNameSpan.innerHTML = `<input type="text" id="l_name_input" value="${lNameVal}" />`;
 
@@ -166,12 +159,16 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
     // show reset password button
     document.querySelector(".reset-password").style.display = "block";
 
+    // show delete button
+    document.querySelector(".delete-btn").style.display = "block";
+
   } else {
     // Retrieve new input values
+    const hNumNew = document.getElementById("h_num_input").value;
     const fNameNew = document.getElementById("f_name_input").value;
     const lNameNew = document.getElementById("l_name_input").value;
 
-    console.log("Attempting to save new data:", { fNameNew, lNameNew });
+    console.log("Attempting to save new data:", { hNumNew, fNameNew, lNameNew });
 
     try {
       // Update Firestore document; email is not updated
@@ -181,6 +178,7 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
       const snap = docSnap.docs[0];     // There should only be one result - each email is unique
       const userDocRef = doc(db, "User Data", snap.id);
       await updateDoc(userDocRef, {
+        h_number: hNumNew,
         first_name: fNameNew,
         last_name: lNameNew
       });
@@ -193,6 +191,7 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
 
       // Revert input fields back to plain text
+      document.getElementById("h_num").innerText = hNumNew;
       document.getElementById("f_name").innerText = fNameNew;
       document.getElementById("l_name").innerText = lNameNew;
 
@@ -203,6 +202,9 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
       // Hide reset password button
       document.querySelector(".reset-password").style.display = "none";
+
+      // Hide delete button
+      document.querySelector(".delete-btn").style.display = "none";
     } catch (error) {
       console.error("Error updating profile:", error);
       // Optionally, you can show an error message on the UI
@@ -230,5 +232,68 @@ document.querySelector(".reset-password").addEventListener("click", async () => 
     // error case for user not logged in
     console.error("No user logged in.");
     alert("No user is currently logged in.");
+  }
+});
+
+
+
+// Delete user account functionality
+
+document.querySelector(".delete-btn").addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("No user is currently logged in.");
+    return;
+  }
+
+  // Prompt the user for their password
+  const password = prompt("For security, please re-enter your password to delete your account:");
+
+  if (!password) {
+    alert("Password is required to delete your account.");
+    return;
+  }
+
+  // Create credential using the user's email and the password entered
+  const credential = EmailAuthProvider.credential(user.email, password);
+
+  try {
+    // Reauthenticate the user
+
+    await reauthenticateWithCredential(user, credential);
+
+    
+    /*
+    // delete user doc in firestore (did not work)
+    // Query for documents based on the stored uid field
+    const usersCollection = collection(db, "User Data");
+    const qy = query(usersCollection, where("uid", "==", user.uid));
+    const querySnapshot = await getDocs(qy);
+
+    console.log("Documents found:", querySnapshot.docs.length);
+    if (querySnapshot.empty) {
+      console.log("No Firestore documents found with the uid:", user.uid);
+    } else {
+      // Use Promise.all to wait for all deletions to complete
+      const deletionPromises = querySnapshot.docs.map((documentSnapshot) => {
+        console.log("Attempting to delete document with ID:", documentSnapshot.id);
+        return deleteDoc(documentSnapshot.ref);
+      });
+      
+      await Promise.all(deletionPromises);
+      console.log("All matching Firestore documents deleted.");
+    }
+    */
+
+
+    // After reauthentication, proceed to delete the account
+    await user.delete();
+    console.log("User account deleted successfully.");
+    alert("Your account has been deleted successfully.");
+    // Redirect to login page or another appropriate page
+    window.location.href = "app.html";
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    alert("Error deleting user account: " + "incorrect password, " + error.message);
   }
 });
