@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HofTAPS - Textbook Swap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="scripts/inbox-handler.js"></script>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+		background-color: black;
+    }
+
+    .container-fluid {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw; 
+		
+    }
+
+    .section {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+	.top-section {
+		background-color: #2414d9;
+		height: 33.33vh;
+		color: #ffbb00;
+		-webkit-text-stroke: 0.25px white;
+		text-align: center;
+	}
+
+
+    .middle-section {
+        background-color: white;
+        height: 33.33vh;
+        text-align: center;
+    }
+
+    .bottom-section {
+        background-color: #ffbb00;
+        height: 33.33vh;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+	.sidebar-toggle-wrapper {
+		position: fixed;
+		top: 10px;
+		left: 10px;
+		display: flex;
+		align-items: center;
+		z-index: 1000;
+	}
+
+	.sidebar-logo {
+		height: 40px;
+		margin-right: 5px;
+	}
+
+	.sidebar-toggle {
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+	}
+
+    .container {
+        margin-top: 20px;
+    }
+    .notification-card {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .notification-actions {
+        margin-top: 10px;
+    }
+    .email-info {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+</style>
+
+
+</head>
+<body>
+	<div class="sidebar-toggle-wrapper">
+		<button class="btn btn-dark sidebar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+			☰
+		</button>
+		<a href="HTAPHome.html">
+		<img src="images/logo.png" alt="HTAPS Logo" class="sidebar-logo">
+		</a>
+
+		<p style="color: #ffbb00;-webkit-text-stroke: 0.25px black;">HofTAPS</p>
+	</div>
+
+    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">HofTAPS</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <a href="HTAPHome.html" class="d-block text-white text-decoration-none p-2">Home</a>
+            <a href="account.html" class="d-block text-white text-decoration-none p-2">Account</a>
+            <a href="HTAPNotification.html" class="d-block text-white text-decoration-none p-2">Notifications</a>
+            <a href="wishlist.html" class="d-block text-white text-decoration-none p-2">Wishlist</a>
+            <a href="HTAPListings.html" class="d-block text-white text-decoration-none p-2">Listings</a>
+            <a href="HTAPSell.html" class="d-block text-white text-decoration-none p-2">Sell Your Book</a>
+            <a href="#" class="d-block text-white text-decoration-none p-2">Settings</a>
+            <a href="#" class="d-block text-white text-decoration-none p-2">Help Center</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="text-center text-white">Notifications</h2>
+        <div class="text-center my-3">
+            <button id="inbox-tab" class="btn btn-primary me-2">Inbox</button>
+            <button id="archived-tab" class="btn btn-secondary">Archived</button>
+          </div>
+          
+          <div id="inbox-threads"></div>
+          
+        <div id="notifications-container"></div>
+    </div>
+	
+	<div class="container-fluid footer">
+        Contact us at HofTAPS@gmail.com
+    </div>
+
+</body>
+</html>
