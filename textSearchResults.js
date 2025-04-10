@@ -18,7 +18,7 @@ booksContainer.innerHTML = "";
 
             // Create detail elements for each piece of information
             const title = document.createElement("p");
-            title.innerHTML = `<strong>Title:</strong> ${book.title}`;
+            title.innerHTML = `<strong>${book.title}</strong>`;
 
             const author = document.createElement("p");
             author.innerHTML = `${book.author}`;

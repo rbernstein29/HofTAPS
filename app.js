@@ -102,13 +102,13 @@ const signUpButtonPressed = async (e) => {
     
             // Send email verification
             await sendEmailVerification(user);
-    
-            // Display a message to the user
-            alert("Verification email sent. Check your inbox.");
 
             onAuthStateChanged(auth, (user) => {
               if (user.emailVerified) {
                 window.location.href = "HTAPHome.html";
+              }
+              else {
+                window.location.href = "verificationWait.html"; // Redirect to the wait page
               }
             });
 
