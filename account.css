@@ -142,8 +142,8 @@ body, html {
 
 
 .reset-password {
-    left: 45%;
-    top: 40%;
+    top: 80px;
+    right: 10px;
     display: none;
     position: absolute;
     padding: 10px 20px;
@@ -161,24 +161,23 @@ body, html {
 }
 
 .delete-btn{
-    left: 45%;
-    top: 32%;
-    display: none;
-    position: absolute;
-    padding: 10px 20px;
-    background-color: #dc3545;
-    color: black;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+  top: 130px;
+  right: 10px;
+  display: none;
+  position: absolute;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
 
 }
 
 .delete-btn:hover {
-    background-color: #a92c38
+  background-color: #a92c38
 }
-
 
 /* Dramatic Book Card styling */
 .book-card {

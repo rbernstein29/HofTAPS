@@ -1,7 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -58,10 +58,11 @@ onAuthStateChanged(auth, async (user) => {
       const userData = snap.data();
       console.log("User data retrieved:", userData);
       // Update the account page DOM with the retrieved data
+      document.getElementById("name").innerText = userData.first_name;
       document.getElementById("h_num").innerText = userData.h_number;
       document.getElementById("f_name").innerText = userData.first_name;
       document.getElementById("l_name").innerText = userData.last_name;
-      document.getElementById("mail").innerText = user.email;
+      document.getElementById("email").innerText = user.email;
       
 
       document.getElementById("profile-container").style.display = "block";
@@ -88,12 +89,14 @@ onAuthStateChanged(auth, async (user) => {
 
         // Create detail elements for each piece of information
         const title = document.createElement("p");
-        title.innerHTML = `<strong>Title:</strong> ${book.title}`;
+        title.innerHTML = `<strong>${book.title}</strong>`;
 
 
         const author = document.createElement("p");
-        author.innerHTML = `<strong>Author:</strong> ${book.author}`;
+        author.innerHTML = `${book.author}`;
 
+        const price = document.createElement("p");
+        price.innerHTML = `<strong>$${book.price}</strong>`;
 
         const isbn = document.createElement("p");
         isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
@@ -108,10 +111,17 @@ onAuthStateChanged(auth, async (user) => {
           listings.removeChild(bookCard);
         };
 
+        bookCard.onclick = () => {
+          localStorage.indListing = JSON.stringify(book);
+
+          window.location.href = "indListing.html";
+        }
+
 
        // Append details to the details container
        details.appendChild(title);
        details.appendChild(author);
+       details.appendChild(price);
        details.appendChild(isbn);
        bookCard.appendChild(img);
        bookCard.appendChild(details);
