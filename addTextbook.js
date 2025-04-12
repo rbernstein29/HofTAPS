@@ -63,8 +63,8 @@ const isbnButtonPressed = async (e) => {
         bookAuthor.textContent = text_author;
 
         const bookISBN = document.createElement('div');
-
         bookISBN.textContent = text_isbn.value;
+
         userBook.appendChild(bookImage);
         userBook.appendChild(bookTitle);
         userBook.appendChild(bookAuthor);
