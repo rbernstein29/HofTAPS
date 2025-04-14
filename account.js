@@ -1,7 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -248,7 +248,6 @@ document.querySelector(".reset-password").addEventListener("click", async () => 
 
 
 // Delete user account functionality
-
 document.querySelector(".delete-btn").addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) {
@@ -256,7 +255,7 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
     return;
   }
 
-  // Prompt the user for their password
+  // Ask the user for their password
   const password = prompt("For security, please re-enter your password to delete your account:");
 
   if (!password) {
@@ -269,34 +268,29 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
 
   try {
     // Reauthenticate the user
-
     await reauthenticateWithCredential(user, credential);
 
-    
-    /*
-    // delete user doc in firestore (did not work)
-    // Query for documents based on the stored uid field
+    // Delete Firestore document(s) first
     const usersCollection = collection(db, "User Data");
-    const qy = query(usersCollection, where("uid", "==", user.uid));
-    const querySnapshot = await getDocs(qy);
+    const userQuery = query(usersCollection, where("uid", "==", user.uid));
+    const querySnapshot = await getDocs(userQuery);
 
     console.log("Documents found:", querySnapshot.docs.length);
+
     if (querySnapshot.empty) {
       console.log("No Firestore documents found with the uid:", user.uid);
     } else {
-      // Use Promise.all to wait for all deletions to complete
-      const deletionPromises = querySnapshot.docs.map((documentSnapshot) => {
-        console.log("Attempting to delete document with ID:", documentSnapshot.id);
-        return deleteDoc(documentSnapshot.ref);
+      // Delete all matching documents
+      const deletionPromises = querySnapshot.docs.map((docSnap) => {
+        console.log("Attempting to delete document with ID:", docSnap.id);
+        return deleteDoc(docSnap.ref);
       });
       
       await Promise.all(deletionPromises);
       console.log("All matching Firestore documents deleted.");
     }
-    */
 
-
-    // After reauthentication, proceed to delete the account
+    // After successfully deleting the Firestore data, delete the auth account
     await user.delete();
     console.log("User account deleted successfully.");
     alert("Your account has been deleted successfully.");
@@ -304,6 +298,6 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
     window.location.href = "app.html";
   } catch (error) {
     console.error("Error deleting user account:", error);
-    alert("Error deleting user account: " + "incorrect password, " + error.message);
+    alert("Error deleting user account: " + error.message);
   }
 });
