@@ -174,3 +174,12 @@ body {
         font-weight: bold; /* Optional: make the text bold */
         text-align: center; /* Optional: center align if the text spans multiple lines */
     }
+
+
+    .back-button {
+        position: absolute;
+        background-color: red;
+        top: 5%;
+        right: 9%;
+        padding: 8px 20px;
+    }
