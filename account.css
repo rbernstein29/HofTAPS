@@ -160,7 +160,24 @@ body, html {
   background-color: #a47900;
 }
 
+.delete-btn{
+  top: 130px;
+  right: 10px;
+  display: none;
+  position: absolute;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
 
+}
+
+.delete-btn:hover {
+  background-color: #a92c38
+}
 
 /* Dramatic Book Card styling */
 .book-card {

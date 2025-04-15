@@ -1,7 +1,7 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 
 const app = initializeApp(firebaseConfig);
@@ -147,14 +147,17 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
   // Toggle to edit mode
   if (!isEditing) {
+    //const hNumSpan = document.getElementById("h_num");
     const fNameSpan = document.getElementById("f_name");
     const lNameSpan = document.getElementById("l_name");
 
     // Get current values
+    //const hNumVal = hNumSpan.innerText;
     const fNameVal = fNameSpan.innerText;
     const lNameVal = lNameSpan.innerText;
 
     // Replace text with input fields
+    // hNumSpan.innerHTML = `<input type="text" id="h_num_input" value="${hNumVal}" />`;
     fNameSpan.innerHTML = `<input type="text" id="f_name_input" value="${fNameVal}" />`;
     lNameSpan.innerHTML = `<input type="text" id="l_name_input" value="${lNameVal}" />`;
 
@@ -166,8 +169,12 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
     // show reset password button
     document.querySelector(".reset-password").style.display = "block";
 
+    // show delete button
+    document.querySelector(".delete-btn").style.display = "block";
+
   } else {
     // Retrieve new input values
+    //const hNumNew = document.getElementById("h_num_input").value;
     const fNameNew = document.getElementById("f_name_input").value;
     const lNameNew = document.getElementById("l_name_input").value;
 
@@ -181,6 +188,7 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
       const snap = docSnap.docs[0];     // There should only be one result - each email is unique
       const userDocRef = doc(db, "User Data", snap.id);
       await updateDoc(userDocRef, {
+        // h_number: hNumNew,
         first_name: fNameNew,
         last_name: lNameNew
       });
@@ -193,6 +201,7 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
 
       // Revert input fields back to plain text
+     // document.getElementById("h_num").innerText = hNumNew;
       document.getElementById("f_name").innerText = fNameNew;
       document.getElementById("l_name").innerText = lNameNew;
 
@@ -203,6 +212,9 @@ document.querySelector('.edit-btn').addEventListener('click', async () => {
 
       // Hide reset password button
       document.querySelector(".reset-password").style.display = "none";
+
+      // Hide delete button
+      document.querySelector(".delete-btn").style.display = "none";
     } catch (error) {
       console.error("Error updating profile:", error);
       // Optionally, you can show an error message on the UI
@@ -230,5 +242,62 @@ document.querySelector(".reset-password").addEventListener("click", async () => 
     // error case for user not logged in
     console.error("No user logged in.");
     alert("No user is currently logged in.");
+  }
+});
+
+
+
+// Delete user account functionality
+document.querySelector(".delete-btn").addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("No user is currently logged in.");
+    return;
+  }
+
+  // Ask the user for their password
+  const password = prompt("For security, please re-enter your password to delete your account:");
+
+  if (!password) {
+    alert("Password is required to delete your account.");
+    return;
+  }
+
+  // Create credential using the user's email and the password entered
+  const credential = EmailAuthProvider.credential(user.email, password);
+
+  try {
+    // Reauthenticate the user
+    await reauthenticateWithCredential(user, credential);
+
+    // Delete Firestore document(s) first
+    const usersCollection = collection(db, "User Data");
+    const userQuery = query(usersCollection, where("uid", "==", user.uid));
+    const querySnapshot = await getDocs(userQuery);
+
+    console.log("Documents found:", querySnapshot.docs.length);
+
+    if (querySnapshot.empty) {
+      console.log("No Firestore documents found with the uid:", user.uid);
+    } else {
+      // Delete all matching documents
+      const deletionPromises = querySnapshot.docs.map((docSnap) => {
+        console.log("Attempting to delete document with ID:", docSnap.id);
+        return deleteDoc(docSnap.ref);
+      });
+      
+      await Promise.all(deletionPromises);
+      console.log("All matching Firestore documents deleted.");
+    }
+
+    // After successfully deleting the Firestore data, delete the auth account
+    await user.delete();
+    console.log("User account deleted successfully.");
+    alert("Your account has been deleted successfully.");
+    // Redirect to login page or another appropriate page
+    window.location.href = "app.html";
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    alert("Error deleting user account: " + error.message);
   }
 });
