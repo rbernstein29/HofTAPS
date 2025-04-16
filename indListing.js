@@ -43,7 +43,9 @@ spine.src = result.spine;
 
 const purchaseButton = document.getElementById("purchase-button");
 purchaseButton.onclick = () => {
-    purchaseBook(result.id);
+    localStorage.indListing = JSON.stringify(result);
+
+    window.location.href = "confirmation.html";
 };
 
 const wishlistButton = document.getElementById("wishlist-button");

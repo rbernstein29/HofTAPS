@@ -35,7 +35,7 @@ const userBook = document.getElementById('userBook');
 
 const IMGUR_CLIENT_ID = "YOUR_IMGUR_CLIENT_ID"; // replace with client ID here then it will run
 
-async function uploadToImgur(file, retries = 2) {
+export async function uploadToImgur(file, retries = 2) {
     if (!file) return ""; 
     
     const formData = new FormData();
@@ -140,8 +140,8 @@ const publishButtonPressed = async (e) => {
             ]);
             
             var text_seller = "";
-            const docRef = query(collection(db, "User Data"), where("email", "==", auth.currentUser.email));
-            const docSnap = await getDocs(docRef);
+            const ref = query(collection(db, "User Data"), where("email", "==", auth.currentUser.email));
+            const docSnap = await getDocs(ref);
             
             const snap = docSnap.docs[0];
             if (snap) {

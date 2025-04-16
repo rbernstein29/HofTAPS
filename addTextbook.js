@@ -35,7 +35,9 @@ const userBook = document.getElementById('userBook');
 const isbnButtonPressed = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${text_isbn.value}`);
+    const textbook_isbn = text_isbn.value.replace("-", "");
+
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${textbook_isbn}`);
     const data = await response.json(); 
 
     // Certain information must be entered by the user
@@ -45,7 +47,7 @@ const isbnButtonPressed = async (e) => {
         text_isbn.reportValidity();
     }
     else {
-        text_title = data.items[0].volumeInfo.title;
+        text_title = data.items[0].volumeInfo.title.replace("'", "");
         if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors.toString(); }
         else { text_author = "Unknown Author"; }
         if (data.items[0].volumeInfo.imageLinks) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail; }
@@ -63,7 +65,7 @@ const isbnButtonPressed = async (e) => {
         bookAuthor.textContent = text_author;
 
         const bookISBN = document.createElement('div');
-        bookISBN.textContent = text_isbn.value;
+        bookISBN.textContent = textbook_isbn;
 
         userBook.appendChild(bookImage);
         userBook.appendChild(bookTitle);
@@ -113,7 +115,7 @@ const publishButtonPressed = async (e) => {
         const docRef = await addDoc(collection(db, "Textbook Data"), {
             title: text_title,                                                              // textbook title
             author: text_author,                                                            // textbook author
-            isbn_number: text_isbn.value,                                                   // textbook isbn number
+            isbn_number: text_isbn.value.replace("-", ""),                                  // textbook isbn number
             subject: text_subject.value,                                                    // textbook subject
             price: Number(text_price.value),                                                // textbook price
             condition: text_condition.value,                                                // textbook condition
