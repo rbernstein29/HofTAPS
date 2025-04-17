@@ -8,15 +8,19 @@
   box-sizing: border-box;
 }
 body {
-  background: #2414d9; 
+  background: #0d1b2a; 
   font-family: 'Montserrat', sans-serif;
   color: #e0e0e0;
 }
-
+.separator {
+  border: none;
+  border-top: 2px solid #ffbb00; /* Set the thickness and color */
+  margin: 0px 0; /* Add space above and below */
+}
 /* Animated Banner */
 .banner {
   background-color: #2414d9;
-  color: #ffbb00;
+  color: #ffffff;
   text-align: center;
   padding: 30px 0;
   -webkit-text-stroke: 0.25px white;
