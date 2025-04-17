@@ -1,8 +1,9 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
+import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { deleteTextbook } from './purchaseTextbook.js'
+import { getUser } from './firebaseInterface.js'
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -106,12 +107,29 @@ onAuthStateChanged(auth, async (user) => {
         removeButton.className = "remove-btn";
         removeButton.innerText = "Remove";
         removeButton.onclick = async () => {
-          purchaseBook(bookRef.id);
+          onAuthStateChanged(auth, (user) => {
+              getUser(user.email)
+              .then((result) => {
+                  const removeListing = async () => {
+                      try {
+                          //  Removes listing from user's listings
+                          await updateDoc(result, {
+                              listings: arrayRemove(bookRef)
+                          });
+                          console.log("Listing removed")
+                      } catch (error) {
+                          console.error("Error updating user listings:", error);
+                      }
+                  }
+              removeListing();
+              })
+            }); 
+            deleteTextbook(result.id);
           // Remove the book card from the DOM
           listings.removeChild(bookCard);
         };
 
-        bookCard.onclick = () => {
+        details.onclick = () => {
           localStorage.indListing = JSON.stringify(book);
 
           window.location.href = "indListing.html";

@@ -2,8 +2,9 @@ import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { getUser } from './firebaseInterface.js';
+import { getUser, getTextbook } from './firebaseInterface.js';
 import { authUser } from './authUser.js';
+import { deleteTextbook } from './purchaseTextbook.js'
 
 authUser(); // Checks if user is signed in
 
@@ -99,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         bookCard.remove();
                     };
 
-                    bookCard.onclick = () => {
+                    details.onclick = () => {
                         localStorage.indListing = JSON.stringify(item);
         
                         window.location.href = "indListing.html";

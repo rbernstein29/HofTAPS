@@ -188,7 +188,7 @@ window.acceptSale = async (threadId, textbookTitle, textbookAuthor, textbookId) 
         }
     removeListing();
     })
-  }); 
+  });
   deleteTextbook(textbookId);
   archiveThread(threadId); 
 }
