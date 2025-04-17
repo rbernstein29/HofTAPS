@@ -1,19 +1,26 @@
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: #0d1b2a;
+  color: #e0e0e0;
+}
+.separator {
+  border: none;
+  border-top: 2px solid #ffbb00; /* Set the thickness and color */
+  margin: 0px 0; /* Add space above and below */
 }
 .top-section {
-    background-color: #2414d9;
-    color: #ffbb00;
-    text-align: center;
-    padding: 30px 0;
-    -webkit-text-stroke: 0.25px white;
+  background-color: #0d1b2a;
+  color: #ffffff;
+  text-align: center;
+  padding: 30px 0;
+  -webkit-text-stroke: 0.25px white;
 }
 .middle-section {
-    background-color: white;
-    padding: 30px 0;
+  background-color: #0d1b2a;
+  padding: 30px 0;
 }
 
 .upload-section {
@@ -40,8 +47,14 @@ body, html {
     max-width: 1100px;
     margin: 40px auto;
     padding: 20px;
+    color: white;
   }
-  
+  /* Add this CSS for the horizontal line */
+.separator {
+  border: none;
+  border-top: 2px solid #ffbb00; /* Set the thickness and color */
+  margin: 20px 0; /* Add space above and below */
+}
   /* Dramatic Book Card styling */
   .book-card {
     background: linear-gradient(145deg, #1b263b, #0d1b2a);
