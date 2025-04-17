@@ -11,7 +11,7 @@ body {
     padding: 20px;
     background-color: #0d1b2a;
     border-radius: 12px;
-    box-shadow: 0px 4px 10px #ffbb00;
+    border: 2px solid #ffbb00;
 }
 .header {
     background: #2414d9;
@@ -177,9 +177,21 @@ body {
 
 
     .back-button {
-        position: absolute;
+        position: fixed;
         background-color: red;
-        top: 5%;
-        right: 9%;
+        top: 10px; /* Fixed distance from the top */
+        right: 10px; /* Fixed distance from the right */
         padding: 8px 20px;
+        border-radius: 25px;
+        color: rgb(0, 0, 0);
+    }
+
+    .back-button a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .back-button a:hover {
+        color: lightgray; /* Changes the color on hover */
+        cursor: pointer; /* Indicates the link is clickable */
     }
