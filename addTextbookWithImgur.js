@@ -32,22 +32,54 @@ const publishButton = document.getElementById('publishButton');
 
 const userBook = document.getElementById('userBook');
 
+
+const IMGUR_CLIENT_ID = "YOUR_IMGUR_CLIENT_ID"; // replace with client ID here then it will run
+
+export async function uploadToImgur(file, retries = 2) {
+    if (!file) return ""; 
+    
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const response = await fetch("https://api.imgur.com/3/image", {
+            method: "POST",
+            headers: {
+                Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
+            },
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            return result.data.link;
+        } else {
+            throw new Error(result.data.error || "Imgur upload failed");
+        }
+    } catch (err) {
+        if (retries > 0) {
+            console.warn(`Retrying upload... (${retries} left)`);
+            await new Promise(res => setTimeout(res, 1000));
+            return uploadToImgur(file, retries - 1);
+        } else {
+            console.error("Image upload failed:", err);
+            return ""; 
+        }
+    }
+}
+
 const isbnButtonPressed = async (e) => {
     e.preventDefault();
 
-    const textbook_isbn = text_isbn.value.replace("-", "");
-
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${textbook_isbn}`);
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${text_isbn.value}`);
     const data = await response.json(); 
 
-    // Certain information must be entered by the user
-    // Requires the user to enter an ISBN number
     if (!data.items) {
         text_isbn.setCustomValidity("Please enter a valid ISBN number.");
         text_isbn.reportValidity();
     }
     else {
-        text_title = data.items[0].volumeInfo.title.replace("'", "");
+        text_title = data.items[0].volumeInfo.title;
         if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors.toString(); }
         else { text_author = "Unknown Author"; }
         if (data.items[0].volumeInfo.imageLinks) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail; }
@@ -65,7 +97,7 @@ const isbnButtonPressed = async (e) => {
         bookAuthor.textContent = text_author;
 
         const bookISBN = document.createElement('div');
-        bookISBN.textContent = textbook_isbn;
+        bookISBN.textContent = text_isbn.value;
 
         userBook.appendChild(bookImage);
         userBook.appendChild(bookTitle);
@@ -74,7 +106,6 @@ const isbnButtonPressed = async (e) => {
     }
 
     publishButton.addEventListener("click", publishButtonPressed);
-
 }
 
 // Detects when the publish button is pressed and executes publishing
@@ -85,7 +116,6 @@ const publishButtonPressed = async (e) => {
     var validCondition = false;
     var validSubject = false;
 
-    // Requires the user to enter a price for the textbook
     if (!text_price.value) {
         text_price.setCustomValidity("Please enter a price");
         text_price.reportValidity();
@@ -101,54 +131,59 @@ const publishButtonPressed = async (e) => {
         text_subject.reportValidity();
     } else { validSubject = true; }
 
-    var text_seller = "";
-    const docRef = query(collection(db, "User Data"), where("email", "==", auth.currentUser.email));   // Gets user with matching email
-    const docSnap = await getDocs(docRef);
-    
-    const snap = docSnap.docs[0];     // There should only be one result - each email is unique
-    if (snap) {
-        text_seller = snap.data();
-    }
-
     if (validPrice && validCondition && validSubject) {
-        // Adds the textbook with the user entered information to the textbook section in Firebase
-        const docRef = await addDoc(collection(db, "Textbook Data"), {
-            title: text_title,                                                              // textbook title
-            author: text_author,                                                            // textbook author
-            isbn_number: text_isbn.value.replace("-", ""),                                  // textbook isbn number
-            subject: text_subject.value,                                                    // textbook subject
-            price: Number(text_price.value),                                                // textbook price
-            condition: text_condition.value,                                                // textbook condition
-            description: text_description.value,                                            // textbook description
-            front_cover: front_cover_img.value,                                             // textbook front cover picture
-            back_cover: back_cover_img.value,                                               // textbook back cover picture
-            spine: spine_img.value,                                                         // textbook spine picture
-            thumbnail: text_thumbnail,                                                      // textbook thumbnail
-            seller: text_seller,                                                            // textbook seller
-        });
+        try {
+            const [frontCoverUrl, backCoverUrl, spineUrl] = await Promise.all([
+                uploadToImgur(front_cover_img.files[0]),
+                uploadToImgur(back_cover_img.files[0]),
+                uploadToImgur(spine_img.files[0])
+            ]);
+            
+            var text_seller = "";
+            const ref = query(collection(db, "User Data"), where("email", "==", auth.currentUser.email));
+            const docSnap = await getDocs(ref);
+            
+            const snap = docSnap.docs[0];
+            if (snap) {
+                text_seller = snap.data();
+            }
 
-        // Adds the textbook above to the user's listings in Firebase
-        onAuthStateChanged(auth, (user) => {
-            getUser(user.email)
-            .then((result) => {
-                const addListing = async () => {
-                    try {
-                        // Adds new listing to user's listings
-                        await updateDoc(result, {
-                            listings: arrayUnion(docRef)
-                        });
-                    } catch (error) {
-                        console.error("Error updating user listings:", error);
+            // Adds the textbook with the user entered information to the textbook section in Firebase
+            const docRef = await addDoc(collection(db, "Textbook Data"), {
+                title: text_title,
+                author: text_author,
+                isbn_number: text_isbn.value,
+                subject: text_subject.value,
+                price: Number(text_price.value),
+                condition: text_condition.value,
+                description: text_description.value,
+                front_cover: frontCoverUrl,
+                back_cover: backCoverUrl,
+                spine: spineUrl,
+                thumbnail: text_thumbnail,
+                seller: text_seller,
+            });
+
+            // Adds the textbook above to the user's listings in Firebase
+            onAuthStateChanged(auth, (user) => {
+                getUser(user.email)
+                .then((result) => {
+                    const addListing = async () => {
+                        try {
+                            await updateDoc(result, {
+                                listings: arrayUnion(docRef)
+                            });
+                        } catch (error) {
+                            console.error("Error updating user listings:", error);
+                        }
                     }
-                }
-            addListing();
-            window.location.href = "account.html";
-            })
-        });
-    
+                    addListing();
+                    window.location.href = "account.html";
+                })
+            });
+            
+        }
     }
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);
-
-

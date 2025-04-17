@@ -1,4 +1,4 @@
-import { addUser } from './firebaseInterface.js';
+import { addUser, getUser } from './firebaseInterface.js';
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 
@@ -61,6 +61,14 @@ onAuthStateChanged(auth, (user) => {
 const signUpButtonPressed = async (e) => {
     e.preventDefault();
 
+    if (getUser(email_input.value)) {
+      // See the UserRecord reference doc for the contents of userRecord.
+      email_input.setCustomValidity("Email already in use");
+      email_input.reportValidity();
+      return;
+    } else {
+      email_input.setCustomValidity("");
+    }
 
     // Validate Hofstra 700 number
     if (!hofstraRegex.test(h700_input.value)) {
