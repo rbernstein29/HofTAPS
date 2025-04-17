@@ -189,9 +189,15 @@ body {
     .back-button a {
         color: rgb(0, 0, 0);
         text-decoration: none;
+        padding: 2px 4px;
+        display: inline-block;
         font-weight: bold;
+        transition: transform 0.2s ease; /* Smooth scaling */
     }
+    
     .back-button a:hover {
-        color: lightgray; /* Changes the color on hover */
-        cursor: pointer; /* Indicates the link is clickable */
+        color: lightgray;
+        cursor: pointer;
+        transform: scale(1.2); /* Grows to 120% of original size */
+        transition: transform 0.2s ease; /* Smooth animation */
     }
