@@ -37,22 +37,22 @@
     }
 
 	.top-section {
-		background-color: #2414d9;
+		background-color: #0d1b2a;
 		height: 33.33vh;
 		color: #ffbb00;
-		-webkit-text-stroke: 0.25px white;
 		text-align: center;
 	}
 
 
     .middle-section {
-        background-color: white;
+        background-color: #0d1b2a;
         height: 33.33vh;
         text-align: center;
+        color: white;
     }
 
     .bottom-section {
-        background-color: #ffbb00;
+        background-color: #0d1b2a;
         height: 53.33vh;
         text-align: center;
         padding-top: 20px;
@@ -101,7 +101,11 @@
 		position: relative; /* Allows absolute positioning of the text */
 		display: inline-block; /* Ensures the image and text stay together */
 	}
-
+    .separator {
+        border: none;
+        border-top: 2px solid #ffbb00; /* Set the thickness and color */
+        margin: 0px 0; /* Add space above and below */
+    }
 	/* Style the text */
 	.centered-text {
 		position: absolute;
@@ -122,6 +126,9 @@
     .carousel-indicators{
         top: 160%;
     }
+    h1 {
+    letter-spacing: 5px; /* Adjust the value as needed */
+}
 
 
 </style>
@@ -161,9 +168,10 @@
         <!-- Top Third (Blue) -->
         <div class="section top-section">
             <div>
-                <h1>Hofstra Textbook Academic Peer Swap</h1>
+                <h1>HofTAPS</h1>
             </div>
         </div>
+        <div class="separator"></div>
 
         <!-- Middle Third (White) -->
         <div class="section middle-section">
@@ -177,7 +185,7 @@
                 <a href="HTAPSell.html" class="btn btn-primary">Sell Your Book</a>
             </div>
         </div>
-
+        <div class="separator"></div>
         <!-- Bottom Third (Gold)image carousel -->
         <div class="section bottom-section">
             <div id="carouselExampleIndicators" class="carousel slide mx-auto responsive-carousel" style="width: 200px; height: 140px; margin-top: -150px" data-bs-ride="carousel">
