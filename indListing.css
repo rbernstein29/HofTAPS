@@ -177,15 +177,12 @@ body {
 
 
     .back-button {
-        position: fixed;
-        background-color: red;
-        top: 10px; /* Fixed distance from the top */
-        right: 10px; /* Fixed distance from the right */
+        position: absolute;
+        background-color: #ffbb00;
+        top: 4.7%;
+        right: 9%;
         padding: 8px 20px;
-        border-radius: 25px;
-        color: rgb(0, 0, 0);
     }
-
     .back-button a {
         color: rgb(0, 0, 0);
         text-decoration: none;

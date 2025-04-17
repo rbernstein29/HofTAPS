@@ -102,3 +102,5 @@ wishlistButton.onclick = () => {
         });
     
 };
+
+
