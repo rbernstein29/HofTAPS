@@ -40,46 +40,51 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                wishlist.forEach(item => {
-                    const bookCard = document.createElement("div");
-                    bookCard.className = "book-card";
+                wishlist.forEach(bk => {
+                    async function getBook() {
+                        const bookRef = doc(db, "Textbook Data", bk.id);
+                        const bookSnap = await getDoc(bookRef);
+                        if (bookSnap.exists()) {
+                            const item = bookSnap.data();
 
-                    const img = document.createElement("img");
-                    img.src = item.thumbnail;
+                            const bookCard = document.createElement("div");
+                            bookCard.className = "book-card";
 
-                    const details = document.createElement("div");
-                    details.className = "book-details";
+                            const img = document.createElement("img");
+                            img.src = item.thumbnail;
 
-                    // Create detail elements for each piece of information
-                    const title = document.createElement("p");
-                    title.innerHTML = `<strong>${item.title}</strong>`;
+                            const details = document.createElement("div");
+                            details.className = "book-details";
 
-                    const author = document.createElement("p");
-                    author.innerHTML = `${item.author}`;
+                            // Create detail elements for each piece of information
+                            const title = document.createElement("p");
+                            title.innerHTML = `<strong>${item.title}</strong>`;
 
-                    const price = document.createElement("p");
-                    price.innerHTML = `<strong>$${item.price}</strong>`;
+                            const author = document.createElement("p");
+                            author.innerHTML = `${item.author}`;
 
-                    const isbn = document.createElement("p");
-                    isbn.innerHTML = `<strong>ISBN:</strong> ${item.isbn_number}`;
+                            const price = document.createElement("p");
+                            price.innerHTML = `<strong>$${item.price}</strong>`;
 
+                            const isbn = document.createElement("p");
+                            isbn.innerHTML = `<strong>ISBN:</strong> ${item.isbn_number}`;
 
-                    const seller = document.createElement("p");
-                    seller.innerHTML = `<strong>Sold By</strong> ${item.seller.first_name} ${item.seller.last_name}`;
+                            const seller = document.createElement("p");
+                            seller.innerHTML = `<strong>Sold By</strong> ${item.seller.first_name} ${item.seller.last_name}`;
 
-                    // Append details to the details container
-                    details.appendChild(title);
-                    details.appendChild(author);
-                    details.appendChild(price);
-                    details.appendChild(isbn);
-                    details.appendChild(seller);
+                            // Append details to the details container
+                            details.appendChild(title);
+                            details.appendChild(author);
+                            details.appendChild(price);
+                            details.appendChild(isbn);
+                            details.appendChild(seller);
 
-                    const removeBtn = document.createElement("button");
-                    removeBtn.className = "remove-btn";
-                    removeBtn.textContent = "Remove from Wishlist";
-                    removeBtn.onclick = () => {
-                        // Remove item from wishlist and update localStorage
-                        onAuthStateChanged(auth, (user) => {
+                            const removeBtn = document.createElement("button");
+                            removeBtn.className = "remove-btn";
+                            removeBtn.textContent = "Remove from Wishlist";
+                            removeBtn.onclick = () => {
+                                // Remove item from wishlist and update localStorage
+                                onAuthStateChanged(auth, (user) => {
                                     getUser(user.email)
                                     .then((result) => {
                                         const removeListing = async () => {
@@ -96,21 +101,43 @@ document.addEventListener("DOMContentLoaded", () => {
                                     removeListing();
                                     })
                                 });
-                        // Remove the card from the DOM
-                        bookCard.remove();
-                    };
+                            // Remove the card from the DOM
+                            bookCard.remove();
+                        };
 
-                    details.onclick = () => {
-                        localStorage.indListing = JSON.stringify(item);
+                        details.onclick = () => {
+                            const obj = JSON.stringify(bookSnap.id);
+                            localStorage.setItem("indListing", obj);
         
-                        window.location.href = "indListing.html";
+                            window.location.href = "indListing.html";
+                        }
+
+                        bookCard.appendChild(img);
+                        bookCard.appendChild(details);
+                        bookCard.appendChild(removeBtn);
+
+                        wishlistContainer.appendChild(bookCard);
+                        } else {
+                            onAuthStateChanged(auth, (user) => {
+                                getUser(user.email)
+                                .then((result) => {
+                                    const removeListing = async () => {
+                                        try {
+                                            //  Removes listing from user's listings
+                                            await updateDoc(result, {
+                                                wishlist: arrayRemove(item)
+                                            });
+                                            console.log("Listing removed:", userData.wishlist)
+                                        } catch (error) {
+                                            console.error("Error updating user listings:", error);
+                                        }
+                                    }
+                                removeListing();
+                                })
+                            });
+                        }
                     }
-
-                    bookCard.appendChild(img);
-                    bookCard.appendChild(details);
-                    bookCard.appendChild(removeBtn);
-
-                wishlistContainer.appendChild(bookCard);
+                getBook();
                 });
             }
         } else {  // No user with email found

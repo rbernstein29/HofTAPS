@@ -1,6 +1,6 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { deleteTextbook } from './purchaseTextbook.js'
 import { getUser } from './firebaseInterface.js'
@@ -70,11 +70,15 @@ onAuthStateChanged(auth, async (user) => {
 
       //listings
       const listings = document.getElementById("books-container");
+      if (userData.listings.length == 0) {
+        listings.innerText = "You do not have any active listings.";
+        return;
+      }
+
       userData.listings.forEach(async (result) => {
         const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
         const bookSnap = await getDoc(bookRef);  // Get the document snapshot
         const book = bookSnap.data();
-
 
         const bookCard = document.createElement("div");
         bookCard.className = "book-card";
@@ -130,7 +134,8 @@ onAuthStateChanged(auth, async (user) => {
         };
 
         details.onclick = () => {
-          localStorage.indListing = JSON.stringify(book);
+          const obj = JSON.stringify(bookSnap.id);
+          localStorage.setItem("indListing", obj);
 
           window.location.href = "indListing.html";
         }

@@ -159,6 +159,7 @@ async function loadArchive() {
 }
 
 window.acceptSale = async (threadId, textbookTitle, textbookAuthor, textbookId) => {
+  const textbookRef = doc(db, "Textbook Data", textbookId)
   const threadSnap = await getDoc(doc(db, "messages", threadId));
   const thread = threadSnap.data();
   await addDoc(collection(db, "messages"), {
@@ -179,7 +180,7 @@ window.acceptSale = async (threadId, textbookTitle, textbookAuthor, textbookId) 
             try {
                 //  Removes listing from user's listings
                 await updateDoc(result, {
-                    listings: arrayRemove(textbookId)
+                    listings: arrayRemove(textbookRef)
                 });
                 console.log("Listing removed")
             } catch (error) {

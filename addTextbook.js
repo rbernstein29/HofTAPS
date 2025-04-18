@@ -35,9 +35,7 @@ const userBook = document.getElementById('userBook');
 const isbnButtonPressed = async (e) => {
     e.preventDefault();
 
-    const textbook_isbn = text_isbn.value.replace("-", "");
-
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${textbook_isbn}`);
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${text_isbn.value}`);
     const data = await response.json(); 
 
     // Certain information must be entered by the user
@@ -65,7 +63,7 @@ const isbnButtonPressed = async (e) => {
         bookAuthor.textContent = text_author;
 
         const bookISBN = document.createElement('div');
-        bookISBN.textContent = textbook_isbn;
+        bookISBN.textContent = text_isbn.value;
 
         userBook.appendChild(bookImage);
         userBook.appendChild(bookTitle);
@@ -115,7 +113,7 @@ const publishButtonPressed = async (e) => {
         const docRef = await addDoc(collection(db, "Textbook Data"), {
             title: text_title,                                                              // textbook title
             author: text_author,                                                            // textbook author
-            isbn_number: text_isbn.value.replace("-", ""),                                  // textbook isbn number
+            isbn_number: text_isbn.value,                                                   // textbook isbn number
             subject: text_subject.value,                                                    // textbook subject
             price: Number(text_price.value),                                                // textbook price
             condition: text_condition.value,                                                // textbook condition

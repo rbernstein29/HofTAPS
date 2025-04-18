@@ -12,7 +12,13 @@ const db = getFirestore(app);
 
 authUser(); // Checks if user is signed in
 
-const result = JSON.parse(localStorage.indListing);
+const obj = localStorage.getItem("indListing")
+const bookId = JSON.parse(obj);
+console.log(bookId);
+
+const bookRef = doc(db, "Textbook Data", bookId);
+const bookSnap = await getDoc(bookRef);
+const result = bookSnap.data();
 
 const title = document.getElementById("bookTitle");
 const author = document.getElementById("author");
@@ -43,7 +49,7 @@ spine.src = result.spine;
 
 const purchaseButton = document.getElementById("purchase-button");
 purchaseButton.onclick = () => {
-    localStorage.indListing = JSON.stringify(result);
+    localStorage.indListing = JSON.stringify(bookSnap.id);
 
     window.location.href = "confirmation.html";
 };
@@ -80,7 +86,7 @@ wishlistButton.onclick = () => {
                                             try {
                                                 // Adds new listing to user's listings
                                                 await updateDoc(currUser, {
-                                                    wishlist: arrayUnion(result)
+                                                    wishlist: arrayUnion(bookRef)
                                                 });
                                                 alert.innerHTML = "Added to wishlist!";
                                                 setTimeout(() => { alert.innerHTML = ""; }, 3000);
