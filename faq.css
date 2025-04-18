@@ -1,10 +1,9 @@
-<style>
         body {
             font-family: Arial, sans-serif;
         }
         
         .top-section {
-            background-color: #2414d9; /* Hofstra blue */
+            background-color: #0d1b2a;; /* Hofstra blue */
             color: white;
             padding: 40px 0;
             text-align: center;
@@ -12,7 +11,7 @@
         
         .faq-section {
             padding: 40px 0;
-            background-color: #f8f9fa;
+            background-color: #0d1b2a;
         }
         
         .faq-item {
@@ -20,6 +19,7 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: rgb(0, 0, 0);
         }
         
         .faq-question {
@@ -61,7 +61,7 @@
             display: flex;
             align-items: center;
             padding: 10px;
-            background-color: #343a40;
+            background-color: #0d1b2a;
         }
         
         .sidebar-logo {
@@ -70,9 +70,24 @@
         }
         
         .bottom-section {
-            background-color: #FFBB00; /* Hofstra gold */
+            background-color: #0d1b2a; /* Hofstra gold */
             padding: 20px 0;
             text-align: center;
-            color: #333;
+            color: #ffbb00;
         }
-    </style>
+        h2 {
+            color: white;
+        }
+
+        .separator {
+            border: none;
+            border-top: 2px solid #ffbb00; /* Set the thickness and color */
+            margin: 0px 0; /* Add space above and below */
+          }
+          .contact-info {
+            color: white;
+        }
+        .form-label {
+            color: white;
+        }
+        

@@ -4,12 +4,6 @@ body, html {
   height: 100%;
   overflow-x: hidden;
   background-color: #0d1b2a;
-  color: #e0e0e0;
-}
-.separator {
-  border: none;
-  border-top: 2px solid #ffbb00; /* Set the thickness and color */
-  margin: 0px 0; /* Add space above and below */
 }
 .top-section {
   background-color: #0d1b2a;
