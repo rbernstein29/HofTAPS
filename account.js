@@ -2,6 +2,8 @@ import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { purchaseBook } from './purchaseTextbook.js';
+import { deleteTextbook } from './firebaseInterface.js';
 
 
 const app = initializeApp(firebaseConfig);
@@ -105,11 +107,17 @@ onAuthStateChanged(auth, async (user) => {
         const removeButton = document.createElement("button");
         removeButton.className = "remove-btn";
         removeButton.innerText = "Remove";
-        removeButton.onclick = async () => {
-          purchaseBook(bookRef.id);
-          // Remove the book card from the DOM
-          listings.removeChild(bookCard);
-        };
+        removeButton.onclick = async (event) => {
+          event.stopPropagation();
+          try {
+              await deleteTextbook(bookRef.id); // Delete from Firestore
+              console.log("Book deleted successfully from Firestore.");
+              listings.removeChild(bookCard); // Remove from DOM
+          } catch (error) {
+              console.error("Error removing book:", error);
+              // Handle the error (e.g., show an error message to the user)
+          }
+      };
 
         bookCard.onclick = () => {
           localStorage.indListing = JSON.stringify(book);

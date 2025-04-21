@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="searchHelper.js" defer></script>
     <script type="module" src="HTAPHome.js" defer></script>
+    <script type="module" src="notifications-listener.js" defer></script>
 <style>
     /* Remove unwanted margins and ensure full width */
     body, html {
@@ -121,6 +122,41 @@
     
     .carousel-indicators{
         top: 160%;
+    }   
+
+    .notifBtn{
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 16px;
+        height: 16px;
+        background-color: red; /* Change to desired color */
+        border-radius: 50%; /* Makes it circular */
+        display: none;
+        color: white; /* Text color */
+        font-size: 12px; /* Adjust font size as needed */
+    }
+
+    .notifBtn2 {
+    /* default offsets—you can override these */
+    --notif-top: 171px;
+    --notif-right: 265px;
+
+    position: absolute;
+    top: var(--notif-top);
+    right: var(--notif-right);
+
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border-radius: 50%;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    z-index: 1001;
     }
 
 
@@ -132,6 +168,7 @@
 	<div class="sidebar-toggle-wrapper">
 		<button class="btn btn-dark sidebar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
 			☰
+            <p class="notifBtn"></p>
 		</button>
 		<a href="HTAPHome.html">
 		<img src="images/logo.png" alt="HTAPS Logo" class="sidebar-logo">
@@ -145,6 +182,7 @@
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">HofTAPS</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            <div class="notifBtn2"></div>
         </div>
         <div class="offcanvas-body">
             <a href="HTAPHome.html" class="d-block text-white text-decoration-none p-2">Home</a>
@@ -237,5 +275,7 @@
         </style>
     </div>
 
+
+    
 </body>
 </html>

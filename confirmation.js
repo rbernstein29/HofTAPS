@@ -31,4 +31,5 @@ purchaseButton.onclick = () => {
 
     heading.innerHTML = "Purchase Request Sent";
     confirmation.innerHTML = "A notification has been sent to the seller. You will receive confirmation once the seller has accepted or declined your request.";
+
 }
