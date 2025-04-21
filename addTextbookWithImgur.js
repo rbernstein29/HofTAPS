@@ -33,7 +33,7 @@ const publishButton = document.getElementById('publishButton');
 const userBook = document.getElementById('userBook');
 
 
-const IMGUR_CLIENT_ID = "YOUR_IMGUR_CLIENT_ID"; // replace with client ID here then it will run
+const IMGUR_CLIENT_ID = "43244fa85148f5c"; 
 
 export async function uploadToImgur(file, retries = 2) {
     if (!file) return ""; 
@@ -182,8 +182,13 @@ const publishButtonPressed = async (e) => {
                 })
             });
             
+        } catch (error) {
+            console.error("Error uploading listing: ", error);
         }
     }
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);
+
+
+

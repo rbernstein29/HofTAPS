@@ -1,7 +1,7 @@
 import { addUser, getUser } from './firebaseInterface.js';
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-
+import { getFirestore, collection, doc, addDoc, getDoc, getDocs, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"; 
 import { 
     getAuth,
     createUserWithEmailAndPassword,
@@ -15,6 +15,7 @@ import {
 // All the vars relating to account creation
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 const mainView = document.getElementById("main-view");
@@ -61,8 +62,10 @@ onAuthStateChanged(auth, (user) => {
 const signUpButtonPressed = async (e) => {
     e.preventDefault();
 
-    if (getUser(email_input.value)) {
-      // See the UserRecord reference doc for the contents of userRecord.
+    const userRef = query(collection(db, "User Data"), where("email", "==", email_input.value));
+    const userSnap = await getDocs(userRef);
+
+    if (userSnap.size != 0) {
       email_input.setCustomValidity("Email already in use");
       email_input.reportValidity();
       return;

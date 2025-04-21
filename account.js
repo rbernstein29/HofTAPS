@@ -293,6 +293,13 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
     // Reauthenticate the user
     await reauthenticateWithCredential(user, credential);
 
+    // Delete all of a User's Listings
+    const textbookQuery = query(collection(db, "Textbook Data"), where("seller.email", "==", auth.currentUser.email))
+    const textbookSnap = await getDocs(textbookQuery);
+    textbookSnap.forEach((book) => {
+        deleteTextbook(book.id);
+    });
+
     // Delete Firestore document(s) first
     const usersCollection = collection(db, "User Data");
     const userQuery = query(usersCollection, where("uid", "==", user.uid));
