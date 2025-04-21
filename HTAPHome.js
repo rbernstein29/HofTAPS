@@ -5,6 +5,7 @@ import { getFirestore, collection, getDocs } from "https://www.gstatic.com/fireb
 import { getUser } from './firebaseInterface.js';
 import { purchaseBook } from "./purchaseTextbook.js";
 
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -108,3 +109,4 @@ async function populateTextbookCarousel() {
 
 // Run the function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', populateTextbookCarousel);
+

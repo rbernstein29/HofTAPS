@@ -1,6 +1,6 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { deleteTextbook } from './purchaseTextbook.js'
 import { getUser } from './firebaseInterface.js'
@@ -110,6 +110,7 @@ onAuthStateChanged(auth, async (user) => {
         const removeButton = document.createElement("button");
         removeButton.className = "remove-btn";
         removeButton.innerText = "Remove";
+
         removeButton.onclick = async () => {
           onAuthStateChanged(auth, (user) => {
               getUser(user.email)
