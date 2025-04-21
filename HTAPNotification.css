@@ -93,3 +93,11 @@ body, html {
     border-top: 2px solid #ffbb00; /* Set the thickness and color */
     margin: 0px 0; /* Add space above and below */
   }
+
+.notification-card {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
