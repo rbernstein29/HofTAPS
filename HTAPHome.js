@@ -75,7 +75,7 @@ async function populateTextbookCarousel() {
     link1.href = "indListing.html"; // This can be a fallback
     link1.onclick = (e) => {
       e.preventDefault(); // Prevent the default navigation
-      localStorage.indListing = JSON.stringify(randomListings[0]);
+      localStorage.indListing = JSON.stringify(randomListings[0].id);
       window.location.href = "indListing.html";
     };
 
@@ -85,7 +85,7 @@ async function populateTextbookCarousel() {
     link2.href = "indListing.html";
     link2.onclick = (e) => {
       e.preventDefault();
-      localStorage.indListing = JSON.stringify(randomListings[1]);
+      localStorage.indListing = JSON.stringify(randomListings[1].id);
       window.location.href = "indListing.html";
     };
 
@@ -95,7 +95,7 @@ async function populateTextbookCarousel() {
     link3.href = "indListing.html";
     link3.onclick = (e) => {
       e.preventDefault();
-      localStorage.indListing = JSON.stringify(randomListings[2]);
+      localStorage.indListing = JSON.stringify(randomListings[2].id);
       window.location.href = "indListing.html";
     };
 

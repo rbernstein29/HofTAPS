@@ -49,13 +49,22 @@ spine.src = result.spine;
 
 const purchaseButton = document.getElementById("purchase-button");
 purchaseButton.onclick = () => {
-    localStorage.indListing = JSON.stringify(bookSnap.id);
+    if (result.seller.email == auth.currentUser.email) {
+        alert.innerHTML = "Cannot purchase your own listing!";
+        setTimeout(() => { alert.innerHTML = ""; }, 3000);
+    } else {
+        localStorage.indListing = JSON.stringify(bookSnap.id);
 
-    window.location.href = "confirmation.html";
+        window.location.href = "confirmation.html";
+    }
 };
 
 const wishlistButton = document.getElementById("wishlist-button");
 wishlistButton.onclick = () => {
+    if (result.seller.email == auth.currentUser.email) {
+        alert.innerHTML = "Cannot add you own listing to your wishlist!";
+        setTimeout(() => { alert.innerHTML = ""; }, 3000);
+    } else {
     onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const email = user.email;
@@ -106,6 +115,7 @@ wishlistButton.onclick = () => {
                   }
             }
         });
+    }
     
 };
 
