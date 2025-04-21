@@ -30,7 +30,7 @@ booksContainer.innerHTML = "";
             isbn.innerHTML = `<strong>ISBN:</strong> ${book.isbn_number}`;
 
             bookCard.onclick = () => {
-                localStorage.indListing = JSON.stringify(book);
+                localStorage.indListing = JSON.stringify(book.id);
 
                 window.location.href = "indListing.html";
             }

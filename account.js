@@ -1,10 +1,9 @@
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
-import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { purchaseBook } from './purchaseTextbook.js';
-import { deleteTextbook } from './firebaseInterface.js';
-
+import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { deleteTextbook } from './purchaseTextbook.js'
+import { getUser } from './firebaseInterface.js'
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -71,11 +70,15 @@ onAuthStateChanged(auth, async (user) => {
 
       //listings
       const listings = document.getElementById("books-container");
+      if (userData.listings.length == 0) {
+        listings.innerText = "You do not have any active listings.";
+        return;
+      }
+
       userData.listings.forEach(async (result) => {
         const bookRef = doc(db, "Textbook Data", result.id);  // Get the document reference for the book
         const bookSnap = await getDoc(bookRef);  // Get the document snapshot
         const book = bookSnap.data();
-
 
         const bookCard = document.createElement("div");
         bookCard.className = "book-card";
@@ -107,20 +110,33 @@ onAuthStateChanged(auth, async (user) => {
         const removeButton = document.createElement("button");
         removeButton.className = "remove-btn";
         removeButton.innerText = "Remove";
-        removeButton.onclick = async (event) => {
-          event.stopPropagation();
-          try {
-              await deleteTextbook(bookRef.id); // Delete from Firestore
-              console.log("Book deleted successfully from Firestore.");
-              listings.removeChild(bookCard); // Remove from DOM
-          } catch (error) {
-              console.error("Error removing book:", error);
-              // Handle the error (e.g., show an error message to the user)
-          }
-      };
 
-        bookCard.onclick = () => {
-          localStorage.indListing = JSON.stringify(book);
+        removeButton.onclick = async () => {
+          onAuthStateChanged(auth, (user) => {
+              getUser(user.email)
+              .then((result) => {
+                  const removeListing = async () => {
+                      try {
+                          //  Removes listing from user's listings
+                          await updateDoc(result, {
+                              listings: arrayRemove(bookRef)
+                          });
+                          console.log("Listing removed")
+                      } catch (error) {
+                          console.error("Error updating user listings:", error);
+                      }
+                  }
+              removeListing();
+              })
+            }); 
+            deleteTextbook(result.id);
+          // Remove the book card from the DOM
+          listings.removeChild(bookCard);
+        };
+
+        details.onclick = () => {
+          const obj = JSON.stringify(bookSnap.id);
+          localStorage.setItem("indListing", obj);
 
           window.location.href = "indListing.html";
         }
@@ -277,6 +293,13 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
   try {
     // Reauthenticate the user
     await reauthenticateWithCredential(user, credential);
+
+    // Delete all of a User's Listings
+    const textbookQuery = query(collection(db, "Textbook Data"), where("seller.email", "==", auth.currentUser.email))
+    const textbookSnap = await getDocs(textbookQuery);
+    textbookSnap.forEach((book) => {
+        deleteTextbook(book.id);
+    });
 
     // Delete Firestore document(s) first
     const usersCollection = collection(db, "User Data");

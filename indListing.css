@@ -177,12 +177,15 @@ body {
 
 
     .back-button {
-        position: absolute;
-        background-color: #ffbb00;
-        top: 4.7%;
-        right: 9%;
+        position: fixed;
+        background-color: red;
+        top: 10px; /* Fixed distance from the top */
+        right: 10px; /* Fixed distance from the right */
         padding: 8px 20px;
+        border-radius: 360px;
+        color: rgb(0, 0, 0);
     }
+
     .back-button a {
         color: rgb(0, 0, 0);
         text-decoration: none;
@@ -198,3 +201,4 @@ body {
         transform: scale(1.2); /* Grows to 120% of original size */
         transition: transform 0.2s ease; /* Smooth animation */
     }
+    

@@ -17,10 +17,9 @@ export async function purchaseBook(target) {
     // Checks if user is signed in
     authUser();
 
-    /*const textbookRef = await doc(db, "Textbook Data", target.id);
-    const textbookSnap = await getDoc(textbookRef);
-    const textbook = textbookSnap.data();*/
-    const textbook = target;
+    const bookRef = doc(db, "Textbook Data", target);
+    const bookSnap = await getDoc(bookRef);
+    const textbook = bookSnap.data();
 
     const docRef = query(collection(db, "User Data"), where("uid", "==", auth.currentUser.uid));   // Gets user with matching email
     const docSnap = await getDocs(docRef);
@@ -36,9 +35,10 @@ export async function purchaseBook(target) {
         lastUpdated: Date.now(),
         archived: [],
         message: `${user.first_name} wishes to purchase ${textbook.title} by ${textbook.author}.`,
+        textbook: textbook,
         textbookTitle: textbook.title,
         textbookAuthor: textbook.author,
-        textbookId: target,//textbookSnap.id,
+        textbookId: bookSnap.id,
         type: "request"
     });
 

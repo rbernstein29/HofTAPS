@@ -12,7 +12,13 @@ const db = getFirestore(app);
 
 authUser(); // Checks if user is signed in
 
-const result = JSON.parse(localStorage.indListing);
+const obj = localStorage.getItem("indListing")
+const bookId = JSON.parse(obj);
+console.log(bookId);
+
+const bookRef = doc(db, "Textbook Data", bookId);
+const bookSnap = await getDoc(bookRef);
+const result = bookSnap.data();
 
 const title = document.getElementById("bookTitle");
 const author = document.getElementById("author");
@@ -43,13 +49,22 @@ spine.src = result.spine;
 
 const purchaseButton = document.getElementById("purchase-button");
 purchaseButton.onclick = () => {
-    localStorage.indListing = JSON.stringify(result);
+    if (result.seller.email == auth.currentUser.email) {
+        alert.innerHTML = "Cannot purchase your own listing!";
+        setTimeout(() => { alert.innerHTML = ""; }, 3000);
+    } else {
+        localStorage.indListing = JSON.stringify(bookSnap.id);
 
-    window.location.href = "confirmation.html";
+        window.location.href = "confirmation.html";
+    }
 };
 
 const wishlistButton = document.getElementById("wishlist-button");
 wishlistButton.onclick = () => {
+    if (result.seller.email == auth.currentUser.email) {
+        alert.innerHTML = "Cannot add you own listing to your wishlist!";
+        setTimeout(() => { alert.innerHTML = ""; }, 3000);
+    } else {
     onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const email = user.email;
@@ -80,7 +95,7 @@ wishlistButton.onclick = () => {
                                             try {
                                                 // Adds new listing to user's listings
                                                 await updateDoc(currUser, {
-                                                    wishlist: arrayUnion(result)
+                                                    wishlist: arrayUnion(bookRef)
                                                 });
                                                 alert.innerHTML = "Added to wishlist!";
                                                 setTimeout(() => { alert.innerHTML = ""; }, 3000);
@@ -100,6 +115,7 @@ wishlistButton.onclick = () => {
                   }
             }
         });
+    }
     
 };
 
