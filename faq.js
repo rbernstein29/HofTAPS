@@ -35,11 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const subject = document.getElementById('subjectInput').value;
             const message = document.getElementById('messageInput').value;
             
-            // Validate email is a Hofstra email
-            if (!email.toLowerCase().endsWith('@pride.hofstra.edu')) {
-                alert('Please use your Hofstra email address.');
-                return;
-            }
+
             
             // Here you would normally send the form data to your server
             // For now, just show a success message
