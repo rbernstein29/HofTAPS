@@ -1,11 +1,14 @@
-const results = JSON.parse(localStorage.searchResults)
+const results = JSON.parse(localStorage.searchResults);
+let currentResults = [...results]; // For sorting without losing original data
 
 document.getElementById("query-title").textContent = "Search Results";
 const booksContainer = document.getElementById("books-container");
-booksContainer.innerHTML = "";
 
-    if (results.length > 0) {
-        results.forEach(book => {
+function renderBooks(bookList) {
+    booksContainer.innerHTML = "";
+
+    if (bookList.length > 0) {
+        bookList.forEach(book => {
             const bookCard = document.createElement("div");
             bookCard.className = "book-card";
 
@@ -16,7 +19,6 @@ booksContainer.innerHTML = "";
             const details = document.createElement("div");
             details.className = "book-details";
 
-            // Create detail elements for each piece of information
             const title = document.createElement("p");
             title.innerHTML = `<strong>${book.title}</strong>`;
 
@@ -31,18 +33,17 @@ booksContainer.innerHTML = "";
 
             bookCard.onclick = () => {
                 localStorage.indListing = JSON.stringify(book.id);
-
                 window.location.href = "indListing.html";
-            }
-                
+            };
+
             details.appendChild(title);
             details.appendChild(author);
             details.appendChild(price);
             details.appendChild(isbn);
+
             bookCard.appendChild(img);
             bookCard.appendChild(details);
             booksContainer.appendChild(bookCard);
-        
         });
     } else {
         const noResults = document.createElement("div");
@@ -50,4 +51,24 @@ booksContainer.innerHTML = "";
         noResults.textContent = "No results found.";
         booksContainer.appendChild(noResults);
     }
-    localStorage.searchResults = "";
+}
+
+// Sorting dropdown handler
+const sortDropdown = document.getElementById("sort");
+if (sortDropdown) {
+    sortDropdown.addEventListener("change", function () {
+        const sortOrder = this.value;
+        let sorted = [...currentResults];
+
+        if (sortOrder === "lowToHigh") {
+            sorted.sort((a, b) => a.price - b.price);
+        } else if (sortOrder === "highToLow") {
+            sorted.sort((a, b) => b.price - a.price);
+        }
+
+        renderBooks(sorted);
+    });
+}
+
+renderBooks(currentResults);
+localStorage.searchResults = "";
