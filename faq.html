@@ -8,12 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="faq.css" rel="stylesheet">
+    <script type="module" src="notifications-listener.js" defer></script>
 </head>
 <body>
     <!-- Sidebar Toggle Button with Image -->
     <div class="sidebar-toggle-wrapper">
         <button class="btn btn-dark sidebar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
             ☰
+            <p class="notifBtn"></p>
         </button>
         <a href="HTAPHome.html">
             <img src="images/logo.png" alt="HTAPS Logo" class="sidebar-logo">
@@ -26,6 +28,7 @@
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">HofTAPS</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            <p class="notifBtn2"></p>
         </div>
         <div class="offcanvas-body">
             <a href="HTAPHome.html" class="d-block text-white text-decoration-none p-2">Home</a>
