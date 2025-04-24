@@ -57,12 +57,7 @@
             content: '\2212'; /* Minus sign */
         }
         
-        .sidebar-toggle-wrapper {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: #0d1b2a;
-        }
+
         
         .sidebar-logo {
             height: 40px;
