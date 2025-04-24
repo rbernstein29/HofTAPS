@@ -74,7 +74,7 @@ const isbnButtonPressed = async (e) => {
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${text_isbn.value}`);
     const data = await response.json(); 
 
-    if (!data.items) {
+    if (!data.items || text_isbn.value == "") {
         text_isbn.setCustomValidity("Please enter a valid ISBN number.");
         text_isbn.reportValidity();
     }
