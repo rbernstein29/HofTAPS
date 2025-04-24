@@ -126,3 +126,38 @@
           color: white;
           z-index: 1001;
           }
+              /* Remove padding/margins around Bootstrap container */
+    .container-fluid, .row {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+	/* Wrapper for button and logo */
+	.sidebar-toggle-wrapper {
+		position: fixed;
+		top: 10px; /* Adjust vertical position */
+		left: 10px; /* Adjust horizontal position */
+		display: flex;
+		align-items: center; /* Align items vertically */
+		z-index: 1000; /* Ensure visibility */
+	}
+
+	/* Style the logo to match the button size */
+	.sidebar-logo {
+		height: 40px; /* Adjust height to match button */
+		margin-right: 5px; /* Add spacing between logo and button */
+	}
+
+	/* Ensure the button retains its appearance */
+	.sidebar-toggle {
+		height: 40px; /* Match the logo height */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000; /* Ensure visibility */
+	}
+	/* Wrapper for image and text */
+	.image-text-wrapper {
+		position: relative; /* Allows absolute positioning of the text */
+		display: inline-block; /* Ensures the image and text stay together */
+	}
