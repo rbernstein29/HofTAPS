@@ -1,7 +1,6 @@
-import { purchaseBook } from "./purchaseTextbook.js";
 import { firebaseConfig } from './hoftapsFirebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js"
 import { getFirestore, doc, getDoc, getDocs, updateDoc, query, collection, where, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { getUser } from './firebaseInterface.js';
 import { authUser } from './authUser.js';
@@ -28,12 +27,17 @@ const seller = document.getElementById("seller");
 const subject = document.getElementById("subject");
 const condition = document.getElementById("condition");
 const description = document.getElementById("description");
+const descDiv = document.getElementById("descDiv");
 const thumbnail = document.getElementById("thumbnail");
 const front = document.getElementById("front");
+const frontText = document.getElementById("frontText");
+const backText = document.getElementById("backText");
+const spineText = document.getElementById("spineText");
 const back = document.getElementById("back");
 const spine = document.getElementById("spine");
 const alert = document.getElementById("alert");
 
+// Populates html elements with textbook info
 title.innerHTML = result.title;
 author.innerHTML += result.author;
 isbn.innerHTML += result.isbn_number;
@@ -41,7 +45,15 @@ price.innerHTML += result.price;
 seller.innerHTML += result.seller.first_name + " " + result.seller.last_name;
 subject.innerHTML += result.subject;
 condition.innerHTML += result.condition;
-description.innerHTML += result.description;
+
+// Removes empty fields from being displayed
+console.log(result.description);
+if (result.description == "") {
+    description.remove();
+    descDiv.remove();
+} else {
+    description.innerHTML += result.description;
+}
 if (result.thumbnail == "") {
     thumbnail.remove();
 } else {
@@ -49,16 +61,19 @@ if (result.thumbnail == "") {
 }
 if (result.front_cover == "") {
     front.remove();
+    frontText.remove();
 } else {
     front.src = result.front_cover;
 }
 if (result.back_cover == "") {
     back.remove();
+    backText.remove();
 } else {
     back.src = result.back_cover;
 }
 if (result.spine == "") {
     spine.remove();
+    spineText.remove();
 } else {
     spine.src = result.spine;
 }
