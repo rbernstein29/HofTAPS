@@ -13,8 +13,10 @@ function renderBooks(bookList) {
             bookCard.className = "book-card";
 
             const img = document.createElement("img");
-            img.className = "book-image";
-            img.src = book.thumbnail;
+            if (book.thumbnail != "") {
+                img.className = "book-image";
+                img.src = book.thumbnail;
+            } 
 
             const details = document.createElement("div");
             details.className = "book-details";

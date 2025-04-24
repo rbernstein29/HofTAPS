@@ -42,10 +42,26 @@ seller.innerHTML += result.seller.first_name + " " + result.seller.last_name;
 subject.innerHTML += result.subject;
 condition.innerHTML += result.condition;
 description.innerHTML += result.description;
-thumbnail.src = result.thumbnail;
-front.src = result.front_cover;
-back.src = result.back_cover;
-spine.src = result.spine;
+if (result.thumbnail == "") {
+    thumbnail.remove();
+} else {
+    thumbnail.src = result.thumbnail;
+}
+if (result.front_cover == "") {
+    front.remove();
+} else {
+    front.src = result.front_cover;
+}
+if (result.back_cover == "") {
+    back.remove();
+} else {
+    back.src = result.back_cover;
+}
+if (result.spine == "") {
+    spine.remove();
+} else {
+    spine.src = result.spine;
+}
 
 const purchaseButton = document.getElementById("purchase-button");
 purchaseButton.onclick = () => {
