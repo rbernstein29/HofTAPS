@@ -189,3 +189,6 @@ const publishButtonPressed = async (e) => {
 }
 
 isbnButton.addEventListener("click", isbnButtonPressed);
+
+
+
