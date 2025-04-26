@@ -1,0 +1,158 @@
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .top-section {
+            background-color: #0d1b2a;; /* Hofstra blue */
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .faq-section {
+            padding: 40px 0;
+            background-color: #0d1b2a;
+        }
+        
+        .faq-item {
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: rgb(0, 0, 0);
+        }
+        
+        .faq-question {
+            background-color: white;
+            color: #333;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-left: 4px solid #FFBB00; /* Hofstra gold */
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            background-color: white;
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .faq-answer.active {
+            padding: 15px 20px;
+            max-height: 500px;
+        }
+        
+        .faq-question:after {
+            content: '\002B'; /* Plus sign */
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .faq-question.active:after {
+            content: '\2212'; /* Minus sign */
+        }
+        
+
+        
+        .sidebar-logo {
+            height: 40px;
+            margin-left: 10px;
+        }
+        
+        .bottom-section {
+            background-color: #0d1b2a; /* Hofstra gold */
+            padding: 20px 0;
+            text-align: center;
+            color: #ffbb00;
+        }
+        h2 {
+            color: white;
+        }
+
+        .separator {
+            border: none;
+            border-top: 2px solid #ffbb00; /* Set the thickness and color */
+            margin: 0px 0; /* Add space above and below */
+          }
+          .contact-info {
+            color: white;
+        }
+        .form-label {
+            color: white;
+        }
+        
+
+        .notifBtn{
+            position: relative;
+            top: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            background-color: red; /* Change to desired color */
+            border-radius: 50%; /* Makes it circular */
+            display: none;
+            color: white; /* Text color */
+            font-size: 12px; /* Adjust font size as needed */
+          }
+          
+          .notifBtn2 {
+          /* default offsets—you can override these */
+          --notif-top: 171px;
+          --notif-right: 265px;
+          
+          position: absolute;
+          top: var(--notif-top);
+          right: var(--notif-right);
+          
+          width: 15px;
+          height: 15px;
+          background-color: red;
+          border-radius: 50%;
+          
+          display: none;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          color: white;
+          z-index: 1001;
+          }
+              /* Remove padding/margins around Bootstrap container */
+    .container-fluid, .row {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+	/* Wrapper for button and logo */
+	.sidebar-toggle-wrapper {
+		position: fixed;
+		top: 10px; /* Adjust vertical position */
+		left: 10px; /* Adjust horizontal position */
+		display: flex;
+		align-items: center; /* Align items vertically */
+		z-index: 1000; /* Ensure visibility */
+	}
+
+	/* Style the logo to match the button size */
+	.sidebar-logo {
+		height: 40px; /* Adjust height to match button */
+		margin-right: 5px; /* Add spacing between logo and button */
+	}
+
+	/* Ensure the button retains its appearance */
+	.sidebar-toggle {
+		height: 40px; /* Match the logo height */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000; /* Ensure visibility */
+	}
+	/* Wrapper for image and text */
+	.image-text-wrapper {
+		position: relative; /* Allows absolute positioning of the text */
+		display: inline-block; /* Ensures the image and text stay together */
+	}

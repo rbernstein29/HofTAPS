@@ -1,0 +1,208 @@
+/* Import Google Fonts (can be custom font) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+/* Global base styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #0d1b2a; 
+  font-family: 'Montserrat', sans-serif;
+  color: #e0e0e0;
+}
+.separator {
+  border: none;
+  border-top: 2px solid #ffbb00; /* Set the thickness and color */
+  margin: 0px 0; /* Add space above and below */
+}
+/* Animated Banner */
+.banner {
+  background-color: #0d1b2a;
+  color: #ffffff;
+  text-align: center;
+  padding: 30px 0;
+  -webkit-text-stroke: 0.25px white;
+}
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+/* Textured overlay for extra depth */
+.banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Main container */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Dramatic Book Card styling */
+.book-card {
+  background: linear-gradient(145deg, #1b263b, #0d1b2a);
+  border-radius: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  border-left: 8px solid #ffbb00; /* accent */
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.book-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 30px rgba(255, 215, 0, 0.6);
+}
+
+/* Book image styling */
+.book-image {
+  width: 160px;
+  height: 240px;
+  object-fit: cover;
+  border-right: 4px solid #ffbb00;
+}
+
+/* Book details styling */
+.book-details {
+  padding: 20px;
+  flex: 1;
+}
+.book-details p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #e0e0e0;
+}
+.book-details p strong {
+  color: #ffbb00;
+}
+
+/* Bold Remove Button with hover effect */
+.remove-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: transparent;
+  border: 2px solid #ffbb00;
+  color: #ffbb00;
+  padding: 8px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.remove-btn:hover {
+  background: #ffbb00;
+  color: #0d1b2a;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .book-card {
+    flex-direction: column;
+  }
+  .book-image {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 4px solid #FFD700;
+  }
+  .book-details {
+    padding: 15px;
+    text-align: center;
+  }
+  .remove-btn {
+    position: static;
+    margin: 15px auto 0;
+    display: block;
+  }
+}
+
+/* Wrapper for button and logo */
+.sidebar-toggle-wrapper {
+  position: fixed;
+  top: 10px; /* Adjust vertical position */
+  left: 10px; /* Adjust horizontal position */
+  display: flex;
+  align-items: center; /* Align items vertically */
+  z-index: 1000; /* Ensure visibility */
+}
+
+/* Style the logo to match the button size */
+.sidebar-logo {
+  height: 40px; /* Adjust height to match button */
+  margin-right: 5px; /* Add spacing between logo and button */
+}
+
+/* Ensure the button retains its appearance */
+.sidebar-toggle {
+  height: 40px; /* Match the logo height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure visibility */
+}
+/* Wrapper for image and text */
+.image-text-wrapper {
+  position: relative; /* Allows absolute positioning of the text */
+  display: inline-block; /* Ensures the image and text stay together */
+}
+
+/* Style the text */
+.centered-text {
+  position: absolute;
+  top: 50%; /* Centers text vertically */
+  left: 50%; /* Centers text horizontally */
+  transform: translate(-50%, -50%); /* Offsets the text by its own dimensions */
+  color: white; /* Text color */
+  font-size: 1rem; /* Adjust text size */
+  font-weight: bold; /* Optional: make the text bold */
+  text-align: center; /* Optional: center align if the text spans multiple lines */
+}
+
+.notifBtn{
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background-color: red; /* Change to desired color */
+  border-radius: 50%; /* Makes it circular */
+  display: none;
+  color: white; /* Text color */
+  font-size: 12px; /* Adjust font size as needed */
+}
+
+.notifBtn2 {
+/* default offsets—you can override these */
+--notif-top: 171px;
+--notif-right: 265px;
+
+position: absolute;
+top: var(--notif-top);
+right: var(--notif-right);
+
+width: 15px;
+height: 15px;
+background-color: red;
+border-radius: 50%;
+
+display: none;
+align-items: center;
+justify-content: center;
+font-size: 12px;
+color: white;
+z-index: 1001;
+}
