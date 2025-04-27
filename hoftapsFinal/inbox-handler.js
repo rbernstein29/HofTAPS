@@ -160,6 +160,8 @@ async function loadArchive() {
 
 window.acceptSale = async (threadId, textbookTitle, textbookAuthor, textbookId) => {
   const textbookRef = doc(db, "Textbook Data", textbookId)
+  const textbookSnap = await getDoc(textbookRef);
+  const textbook = textbookSnap.data();
   const threadSnap = await getDoc(doc(db, "messages", threadId));
   const thread = threadSnap.data();
   await addDoc(collection(db, "messages"), {
@@ -173,6 +175,16 @@ window.acceptSale = async (threadId, textbookTitle, textbookAuthor, textbookId) 
     message: `${thread.sentToUser.first_name} has accepted your purchase of ${textbookTitle} by ${textbookAuthor}.`,
     type: "confirmation"
   });
+
+  await addDoc(collection(db, "Past Transactions"), {
+    participants: [thread.sentToUser.email, thread.sentByUser.email],
+    lastUpdated: Date.now(),
+    textThumbnail: textbook.thumbnail,
+    textbookISBN: textbook.isbn_number,
+    textbookPrice: textbook.price,
+    message: `${thread.sentByUser.first_name} purchased ${textbookTitle} by ${textbookAuthor} from ${thread.sentToUser.first_name}.`,
+  });
+
   onAuthStateChanged(auth, (user) => {
     getUser(user.email)
     .then((result) => {

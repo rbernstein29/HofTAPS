@@ -166,7 +166,7 @@ const publishButtonPressed = async (e) => {
 
             // Adds the textbook above to the user's listings in Firebase
             onAuthStateChanged(auth, (user) => {
-                getUser(user.email)
+            getUser(user.email)
                 .then((result) => {
                     const addListing = async () => {
                         try {
@@ -181,7 +181,6 @@ const publishButtonPressed = async (e) => {
                     window.location.href = "account.html";
                 })
             });
-            
         } catch (error) {
             console.error("Error uploading listing: ", error);
         }

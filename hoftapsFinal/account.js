@@ -4,12 +4,13 @@ import { getAuth, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUse
 import { getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, query, collection, where, arrayRemove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { deleteTextbook } from './purchaseTextbook.js'
 import { getUser } from './firebaseInterface.js'
+import { loadTransactionHistory } from './transactionhistory.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
+loadTransactionHistory(); // Load transaction history on page load
 
 // Log Out
 document.getElementById("logout-btn").addEventListener("click", () => {

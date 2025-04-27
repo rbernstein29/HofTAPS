@@ -10,6 +10,7 @@
   <script type="module" src="account.js" defer> </script>
   <link rel="stylesheet" href="account.css">
   <script type="module" src="notifications-listener.js" defer></script>
+  <scrpit type ="module" src="transactionhistory.js" defer></scrpit>
 </head>
 
 <body>
@@ -89,6 +90,16 @@
             <h2 class="section middle-section">Your Listings</h2>
             <div class="separator"></div><!---new-->
             <div id="books-container">
+                <!-- Listings will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="accountHistory" class="transaction-history">
+            <br></br>
+            <br></br>
+            <h2 class="section middle-section">Transaction History</h2>
+            <div class="separator"></div><!---new-->
+            <div id="history-container">
                 <!-- Listings will be dynamically inserted here -->
             </div>
         </div>

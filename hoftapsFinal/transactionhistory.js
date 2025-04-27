@@ -1,21 +1,17 @@
-//Optional: if inline HTML page
+import { firebaseConfig } from './hoftapsFirebaseConfig.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
-/*
- historyTab.onclick = () => { setActiveTab("history"); };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth();
 
-    function setActiveTab(tab) {
-      currentTab = tab;
-      [inboxTab, offersTab, archivedTab, historyTab].forEach(btn => {
-        btn.classList.toggle("active", btn.id === `${tab}-tab`);
-      });
-      loadThreads();
-    }
-*/
-
-    async function loadTransactionHistory() {
+export async function loadTransactionHistory() {
+  const inboxContainer = document.getElementById("history-container");
   try {
     inboxContainer.innerHTML = "<p>Loading history...</p>";
-
+/*
     const sellerQuery = db.collection("requests")
       .where("sellerId", "==", currentUser.uid)
       .where("status", "==", "accepted")
@@ -24,31 +20,58 @@
     const buyerQuery = db.collection("requests")
       .where("buyerId", "==", currentUser.uid)
       .where("status", "==", "accepted")
-      .orderBy("updatedAt", "desc");
+      .orderBy("updatedAt", "desc"); */
 
-    const [sellerSnap, buyerSnap] = await Promise.all([
-      sellerQuery.get(),
-      buyerQuery.get()
-    ]);
+    onAuthStateChanged(auth, async (user) => {
+      const userQuery = query(collection(db, "Past Transactions"), where("participants", "array-contains", user.email));
 
-    const transactions = [
-      ...sellerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "sold" })),
-      ...buyerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "bought" }))
-    ].sort((a, b) => b.updatedAt?.toDate() - a.updatedAt?.toDate());
+      const [/*sellerSnap, buyerSnap,*/ userSnap] = await Promise.all([
+        //sellerQuery.get(),
+        //buyerQuery.get(),
+        getDocs(userQuery)
+      ]);
 
-    if (transactions.length === 0) {
-      inboxContainer.innerHTML = `
-        <div class="empty-state">
-          <p>No transactions found</p>
-        </div>
-      `;
-      return;
-    }
+      const transactions = [
+        //...sellerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "sold" })),
+        //...buyerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "bought" })),
+        ...userSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "transaction" }))
+      ].sort((a, b) => b.lastUpdated?.toDate() - a.lastUpdated?.toDate());
 
+      if (transactions.length == 0) {
+        inboxContainer.innerHTML = `
+          <div class="empty-state">
+            <p>No transactions found</p>
+          </div>
+        `;
+        return;
+      } else {
+        inboxContainer.innerHTML = "";
+        transactions.forEach(tx => {
+          inboxContainer.innerHTML += `
+            <div class="thread-card">
+              <div class="thread-left">
+                <p>${tx.message}</p>
+                <div class="content">
+                  <div class="main-image">
+                    <img src="${tx.textThumbnail || ""}" alt="Book Cover">
+                  </div>
+                  <div class="details">
+                    <p>ISBN: ${tx.textbookISBN}</p>
+                    <p>Price: $${tx.textbookPrice}</p>
+                    <p>Sold on: ${new Date(tx.lastUpdated).toDateString()}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+    });
+/*
     inboxContainer.innerHTML = "";
 
     const bookIds = [...new Set(transactions.map(tx => tx.bookId))];
-    const booksSnap = await db.collection("books")
+    const booksSnap = await collection(db, "books")
       .where(firebase.firestore.FieldPath.documentId(), "in", bookIds)
       .get();
 
@@ -73,7 +96,7 @@
         </div>
       `;
       inboxContainer.appendChild(div);
-    });
+    }); */
   } catch (error) {
     console.error("Error loading history:", error);
     inboxContainer.innerHTML = `

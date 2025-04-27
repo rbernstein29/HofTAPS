@@ -193,6 +193,54 @@ body, html {
   background-color: #a92c38
 }
 
+.transaction-history {
+  color: white;
+}
+
+.thread-card {
+  background: #0d1b2a;
+  color: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border:2px solid #ffbb00;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  display: flex;
+  margin-top: 20px;
+  gap: 20px;
+}
+.main-image {
+  float: left;
+}
+.main-image img {
+  width: 80%;
+  max-width: 125px;
+  height: auto;
+  border: 3px solid white; /* Adds a white border */
+  border-radius: 10px; /* Optional: Keeps the edges rounded */
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  transition: transform 0.3s ease; /* Smooth scaling effect on hover */
+}
+
+.main-image img:hover {
+  transform: scale(1.1); /* Slightly enlarges the image on hover */
+}
+.details {
+  margin-top: 20px;
+  gap: 15px;
+}
+.details h2 {
+  color: #ffbb00;
+  margin-bottom: 10px;
+}
+.details p {
+  margin: 5px 0;
+  line-height: 1.6;
+}
+
 /* Dramatic Book Card styling */
 .book-card {
     background: linear-gradient(145deg, #1b263b, #0d1b2a);
