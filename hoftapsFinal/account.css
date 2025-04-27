@@ -193,6 +193,10 @@ body, html {
   background-color: #a92c38
 }
 
+.user-listings {
+  color: white;
+}
+
 .transaction-history {
   color: white;
 }
