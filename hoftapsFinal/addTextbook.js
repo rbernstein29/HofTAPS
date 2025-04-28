@@ -79,7 +79,7 @@ const isbnButtonPressed = async (e) => {
         text_isbn.reportValidity();
     }
     else {
-        text_title = data.items[0].volumeInfo.title;
+        text_title = data.items[0].volumeInfo.title.replace("'", "");
         if (data.items[0].volumeInfo.authors) { text_author = data.items[0].volumeInfo.authors.toString(); }
         else { text_author = "Unknown Author"; }
         if (data.items[0].volumeInfo.imageLinks) { text_thumbnail = data.items[0].volumeInfo.imageLinks.thumbnail; }
