@@ -23,7 +23,7 @@ const mainView = document.getElementById("main-view");
 const signUpContainer = document.querySelector('.signup-container');
 const logInContainer = document.querySelector('.login-container');
 const userProfileView = document.getElementById('profile-container');
-const email_input = document.getElementById('email')
+const email_input = document.getElementById('email');
 
 const h700_input = document.getElementById('h700')
 const hofstraRegex = /^h?7\d{8}$/i;
@@ -62,7 +62,7 @@ onAuthStateChanged(auth, (user) => {
 const signUpButtonPressed = async (e) => {
     e.preventDefault();
 
-    const userRef = query(collection(db, "User Data"), where("email", "==", email_input.value));
+    const userRef = query(collection(db, "User Data"), where("email", "==", email_input.value.toLowerCase()));
     const userSnap = await getDocs(userRef);
 
     if (userSnap.size != 0) {
@@ -109,7 +109,7 @@ const signUpButtonPressed = async (e) => {
             console.log(userCredential)
 
 
-            console.log(addUser(user.uid, firstname_input.value, lastname_input.value, email_input.value, h700_input.value));
+            console.log(addUser(user.uid, firstname_input.value, lastname_input.value, email_input.value.toLowerCase(), h700_input.value));
     
             // Send email verification
             await sendEmailVerification(user);
