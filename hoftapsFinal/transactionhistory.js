@@ -35,7 +35,7 @@ export async function loadTransactionHistory() {
         //...sellerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "sold" })),
         //...buyerSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "bought" })),
         ...userSnap.docs.map(doc => ({ ...doc.data(), id: doc.id, type: "transaction" }))
-      ].sort((a, b) => b.lastUpdated?.toDate() - a.lastUpdated?.toDate());
+      ].sort((a, b) => b.lastUpdated - a.lastUpdated);
 
       if (transactions.length == 0) {
         inboxContainer.innerHTML = `
